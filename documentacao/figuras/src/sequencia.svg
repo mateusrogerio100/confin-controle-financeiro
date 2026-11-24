@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" width="820" height="560" font-family="Arial" font-size="12.5">
+  <defs>
+    <marker id="cheia" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000"/>
+    </marker>
+    <marker id="aberta" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#000" stroke-width="1.3"/>
+    </marker>
+  </defs>
+  <rect width="820" height="560" fill="#fff"/>
+  <!-- Participantes -->
+  <g stroke="#000" stroke-width="1.3" fill="#fff">
+    <rect x="25"  y="15" width="170" height="44"/>
+    <rect x="245" y="15" width="170" height="44"/>
+    <rect x="455" y="15" width="150" height="44"/>
+    <rect x="630" y="15" width="170" height="44"/>
+  </g>
+  <g text-anchor="middle" font-weight="bold">
+    <text x="110" y="35">:Navegador</text><text x="110" y="51" font-weight="normal" font-size="11.5">(membro que registra)</text>
+    <text x="330" y="35">:API</text><text x="330" y="51" font-weight="normal" font-size="11.5">(Node.js + Express)</text>
+    <text x="530" y="35">:PostgreSQL</text><text x="530" y="51" font-weight="normal" font-size="11.5">(banco de dados)</text>
+    <text x="715" y="35">:Navegador</text><text x="715" y="51" font-weight="normal" font-size="11.5">(outro membro)</text>
+  </g>
+  <!-- Linhas de vida -->
+  <g stroke="#000" stroke-width="1" stroke-dasharray="5,4">
+    <line x1="110" y1="59" x2="110" y2="545"/>
+    <line x1="330" y1="59" x2="330" y2="545"/>
+    <line x1="530" y1="59" x2="530" y2="545"/>
+    <line x1="715" y1="59" x2="715" y2="545"/>
+  </g>
+  <!-- Barras de ativação -->
+  <g fill="#fff" stroke="#000" stroke-width="1.1">
+    <rect x="324" y="88" width="12" height="250"/>
+    <rect x="524" y="168" width="12" height="32"/>
+    <rect x="524" y="228" width="12" height="32"/>
+    <rect x="324" y="378" width="12" height="96"/>
+    <rect x="524" y="408" width="12" height="32"/>
+  </g>
+  <!-- Mensagens síncronas (linha cheia, seta cheia) -->
+  <g stroke="#000" stroke-width="1.2" marker-end="url(#cheia)">
+    <line x1="110" y1="90" x2="322" y2="90"/>
+    <path d="M336,115 h40 v22 h-38" fill="none"/>
+    <line x1="336" y1="170" x2="522" y2="170"/>
+    <line x1="336" y1="230" x2="522" y2="230"/>
+    <line x1="715" y1="380" x2="338" y2="380"/>
+    <line x1="336" y1="410" x2="522" y2="410"/>
+    <path d="M715,500 h40 v22 h-38" fill="none"/>
+  </g>
+  <!-- Retornos (tracejado, seta aberta) -->
+  <g stroke="#000" stroke-width="1.2" stroke-dasharray="6,4" marker-end="url(#aberta)">
+    <line x1="524" y1="198" x2="338" y2="198"/>
+    <line x1="524" y1="258" x2="338" y2="258"/>
+    <line x1="324" y1="330" x2="112" y2="330"/>
+    <line x1="524" y1="438" x2="338" y2="438"/>
+    <line x1="324" y1="470" x2="713" y2="470"/>
+  </g>
+  <!-- Mensagem assíncrona (evento WebSocket) -->
+  <line x1="336" y1="295" x2="713" y2="295" stroke="#000" stroke-width="1.2" marker-end="url(#aberta)"/>
+  <!-- Rótulos -->
+  <g>
+    <text x="118" y="84">1: POST /api/despesas (token JWT)</text>
+    <text x="382" y="122" font-size="11.5">2: verificar token e</text>
+    <text x="382" y="136" font-size="11.5">validar dados (RN002)</text>
+    <text x="345" y="164">3: INSERT INTO despesa</text>
+    <text x="350" y="192" font-size="11.5">4: despesa registrada</text>
+    <text x="345" y="224">5: SELECT saldo do mês</text>
+    <text x="350" y="252" font-size="11.5">6: total gasto e limite</text>
+    <text x="345" y="289">7: evento familia:mudou (WebSocket)</text>
+    <text x="120" y="324" font-size="11.5">8: 201 Created (despesa e saldo)</text>
+    <text x="420" y="374">9: GET /api/despesas/resumo</text>
+    <text x="345" y="404">10: consultas do resumo</text>
+    <text x="350" y="432" font-size="11.5">11: dados do mês</text>
+    <text x="420" y="464" font-size="11.5">12: 200 OK (saldo, gráficos, alerta)</text>
+    <text x="560" y="496" font-size="11.5">13: atualizar dashboard</text>
+    <text x="560" y="510" font-size="11.5">e exibir alerta (RN004)</text>
+  </g>
+</svg>

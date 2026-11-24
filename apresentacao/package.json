@@ -1,0 +1,13 @@
+{
+  "name": "confin-apresentacao",
+  "private": true,
+  "type": "module",
+  "description": "Gera os slides do pitch (ConFin-Pitch.pptx) com pptxgenjs",
+  "scripts": {
+    "gerar": "node gerar-slides.js"
+  },
+  "dependencies": {
+    "pptxgenjs": "^3.12.0",
+    "qrcode": "^1.5.4"
+  }
+}

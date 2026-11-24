@@ -1,0 +1,13 @@
+{
+  "name": "confin-documentacao",
+  "private": true,
+  "type": "module",
+  "description": "Gera a documentação final (ABNT) em .docx",
+  "scripts": {
+    "gerar": "node gerar-documento.js"
+  },
+  "dependencies": {
+    "docx": "^9.5.1",
+    "puppeteer-core": "^24.43.1"
+  }
+}

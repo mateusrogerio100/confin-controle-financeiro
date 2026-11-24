@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 380" width="880" height="380" font-family="Arial" font-size="13">
+  <defs>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 z" fill="#000"/></marker>
+    <marker id="b" markerWidth="12" markerHeight="12" refX="0" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M10,0 L0,5 L10,10 z" fill="#000"/></marker>
+  </defs>
+  <rect width="880" height="380" fill="#fff"/>
+  <!-- Cliente -->
+  <rect x="10" y="40" width="220" height="200" rx="10" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="120" y="64" text-anchor="middle" font-weight="bold" font-size="11.5">CAMADA DE APRESENTAÇÃO</text>
+  <text x="120" y="90" text-anchor="middle" font-weight="bold" font-size="15">Navegador / celular</text>
+  <text x="26" y="120">• React + Vite</text>
+  <text x="26" y="142">• Tailwind CSS (Mobile First)</text>
+  <text x="26" y="164">• Recharts (gráficos)</text>
+  <text x="26" y="186">• PWA (instalável)</text>
+  <text x="26" y="208">• Socket.io (cliente)</text>
+  <!-- Servidor -->
+  <rect x="305" y="20" width="275" height="240" rx="10" fill="#f3f4f6" stroke="#000" stroke-width="2"/>
+  <text x="442" y="44" text-anchor="middle" font-weight="bold" font-size="11.5">CAMADA DE APLICAÇÃO · RENDER</text>
+  <text x="442" y="70" text-anchor="middle" font-weight="bold" font-size="15">Node.js + Express</text>
+  <text x="322" y="100">• API REST (/api/...)</text>
+  <text x="322" y="122">• Regras de negócio (RN001 a RN004)</text>
+  <text x="322" y="144">• Autenticação com bcrypt e JWT</text>
+  <text x="322" y="166">• Socket.io: uma sala por família</text>
+  <text x="322" y="188">• Entrega do front-end compilado</text>
+  <text x="322" y="210">• Verificação de saúde (/api/health)</text>
+  <!-- Banco -->
+  <rect x="655" y="40" width="215" height="200" rx="10" fill="#fff" stroke="#000" stroke-width="1.5"/>
+  <text x="762" y="64" text-anchor="middle" font-weight="bold" font-size="11.5">CAMADA DE DADOS · SUPABASE</text>
+  <text x="762" y="90" text-anchor="middle" font-weight="bold" font-size="15">PostgreSQL</text>
+  <text x="671" y="120">• Tabelas familia, usuario,</text>
+  <text x="682" y="142">despesa e convite</text>
+  <text x="671" y="164">• Restrições UNIQUE e CHECK</text>
+  <text x="671" y="186">• Row Level Security</text>
+  <text x="671" y="208">• Backup gerenciado</text>
+  <!-- Conexões -->
+  <line x1="234" y1="140" x2="301" y2="140" stroke="#000" stroke-width="1.6" marker-end="url(#a)" marker-start="url(#b)"/>
+  <text x="267" y="128" text-anchor="middle" font-weight="bold" font-size="12">HTTPS</text>
+  <text x="267" y="160" text-anchor="middle" font-size="10.5">REST + WS</text>
+  <line x1="584" y1="140" x2="651" y2="140" stroke="#000" stroke-width="1.6" marker-end="url(#a)" marker-start="url(#b)"/>
+  <text x="617" y="128" text-anchor="middle" font-weight="bold" font-size="12">SQL</text>
+  <text x="617" y="160" text-anchor="middle" font-size="10.5">com SSL</text>
+  <!-- Deploy contínuo -->
+  <rect x="215" y="300" width="170" height="50" rx="8" fill="#fff" stroke="#000" stroke-width="1.3"/>
+  <text x="300" y="322" text-anchor="middle" font-weight="bold">GitHub</text>
+  <text x="300" y="339" text-anchor="middle" font-size="11.5">código-fonte (branch main)</text>
+  <line x1="389" y1="325" x2="475" y2="325" stroke="#000" stroke-width="1.4" marker-end="url(#a)"/>
+  <text x="432" y="316" text-anchor="middle" font-size="11.5">git push</text>
+  <rect x="480" y="300" width="210" height="50" rx="8" fill="#fff" stroke="#000" stroke-width="1.3"/>
+  <text x="585" y="322" text-anchor="middle" font-weight="bold">Deploy automático</text>
+  <text x="585" y="339" text-anchor="middle" font-size="11.5">build → teste de saúde → no ar</text>
+  <line x1="510" y1="300" x2="470" y2="264" stroke="#000" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#a)"/>
+</svg>

@@ -1,0 +1,19 @@
+{
+  "name": "confin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ConFin - Sistema de Controle Financeiro Familiar (Projeto Integrador II - FATEC)",
+  "scripts": {
+    "setup": "npm install --prefix api && npm install --prefix web",
+    "db:local": "npm run db:local --prefix api",
+    "db:seed": "npm run db:seed --prefix api",
+    "dev:api": "npm run dev --prefix api",
+    "dev:web": "npm run dev --prefix web",
+    "test:smoke": "npm run test:smoke --prefix api",
+    "build": "npm ci --prefix api --omit=dev && npm ci --prefix web --include=dev && npm run build --prefix web",
+    "start": "npm start --prefix api"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

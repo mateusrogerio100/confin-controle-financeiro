@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" width="800" height="560" font-family="Arial" font-size="13">
+  <defs>
+    <marker id="gen" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L14,8 L0,16 z" fill="#fff" stroke="#000" stroke-width="1.3"/>
+    </marker>
+  </defs>
+  <rect width="800" height="560" fill="#fff"/>
+  <!-- Fronteira do sistema -->
+  <rect x="230" y="15" width="555" height="530" fill="none" stroke="#000" stroke-width="1.4"/>
+  <text x="507" y="38" text-anchor="middle" font-weight="bold" font-size="14">Sistema ConFin</text>
+
+  <!-- Ator: Membro Familiar -->
+  <g stroke="#000" stroke-width="1.6" fill="none">
+    <circle cx="90" cy="150" r="13"/>
+    <line x1="90" y1="163" x2="90" y2="200"/>
+    <line x1="66" y1="176" x2="114" y2="176"/>
+    <line x1="90" y1="200" x2="70" y2="230"/>
+    <line x1="90" y1="200" x2="110" y2="230"/>
+  </g>
+  <text x="90" y="252" text-anchor="middle">Membro Familiar</text>
+
+  <!-- Ator: Administrador -->
+  <g stroke="#000" stroke-width="1.6" fill="none">
+    <circle cx="90" cy="380" r="13"/>
+    <line x1="90" y1="393" x2="90" y2="430"/>
+    <line x1="66" y1="406" x2="114" y2="406"/>
+    <line x1="90" y1="430" x2="70" y2="460"/>
+    <line x1="90" y1="430" x2="110" y2="460"/>
+  </g>
+  <text x="90" y="482" text-anchor="middle">Administrador</text>
+  <text x="90" y="498" text-anchor="middle" font-size="11">(da família)</text>
+
+  <!-- Generalização: Administrador é um Membro -->
+  <line x1="90" y1="365" x2="90" y2="262" stroke="#000" stroke-width="1.3" marker-end="url(#gen)"/>
+
+  <!-- Casos de uso do Membro -->
+  <g fill="#fff" stroke="#000" stroke-width="1.3">
+    <ellipse cx="505" cy="80"  rx="175" ry="24"/>
+    <ellipse cx="505" cy="135" rx="175" ry="24"/>
+    <ellipse cx="505" cy="190" rx="175" ry="24"/>
+    <ellipse cx="505" cy="245" rx="175" ry="24"/>
+    <ellipse cx="505" cy="300" rx="175" ry="24"/>
+    <ellipse cx="505" cy="355" rx="175" ry="24"/>
+    <ellipse cx="505" cy="420" rx="175" ry="24"/>
+    <ellipse cx="505" cy="470" rx="175" ry="24"/>
+    <ellipse cx="505" cy="520" rx="175" ry="20"/>
+  </g>
+  <g text-anchor="middle">
+    <text x="505" y="84">Cadastrar-se e autenticar-se (RF001)</text>
+    <text x="505" y="139">Criar família ou entrar com código</text>
+    <text x="505" y="194" font-weight="bold">Registrar despesa – UC002 (RF002)</text>
+    <text x="505" y="249">Editar ou excluir a própria despesa</text>
+    <text x="505" y="304">Consultar dashboard em tempo real (RF004)</text>
+    <text x="505" y="359">Consultar histórico de despesas</text>
+    <text x="505" y="424">Alterar limite mensal (RN003)</text>
+    <text x="505" y="474">Convidar membros (RF003)</text>
+    <text x="505" y="524">Remover membros (RN003)</text>
+  </g>
+
+  <!-- Associações -->
+  <g stroke="#000" stroke-width="1.1">
+    <line x1="116" y1="176" x2="330" y2="80"/>
+    <line x1="116" y1="176" x2="330" y2="135"/>
+    <line x1="116" y1="176" x2="330" y2="190"/>
+    <line x1="116" y1="176" x2="330" y2="245"/>
+    <line x1="116" y1="176" x2="330" y2="300"/>
+    <line x1="116" y1="176" x2="330" y2="355"/>
+    <line x1="116" y1="406" x2="330" y2="420"/>
+    <line x1="116" y1="406" x2="330" y2="470"/>
+    <line x1="116" y1="406" x2="330" y2="520"/>
+  </g>
+</svg>

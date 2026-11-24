@@ -1,0 +1,840 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Guia de Estudo — ConFin por dentro</title>
+<style>
+  @page { size: A4; margin: 18mm 17mm 18mm 17mm; }
+  @page :first { margin: 0; }
+  :root {
+    --verde: #059669; --verde-esc: #064e3b; --verde-claro: #d1fae5; --verde-fundo: #ecfdf5;
+    --tinta: #0f172a; --texto: #334155; --suave: #64748b; --borda: #e2e8f0; --fundo: #f8fafc;
+    --azul: #2563eb; --azul-fundo: #eff6ff; --ambar: #b45309; --ambar-fundo: #fffbeb;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; color: var(--texto); font-size: 10.5pt; line-height: 1.55; margin: 0; background: #fff; }
+  h1, h2, h3, h4 { color: var(--tinta); line-height: 1.25; }
+  h2 { font-size: 19pt; margin: 10mm 0 4mm; padding-top: 4mm; border-top: 0.6mm solid var(--verde-claro); break-after: avoid; }
+  h3, h4 { break-after: avoid; }
+  h2.nova { break-before: page; border-top: none; margin-top: 0; }
+  h2 .num { color: var(--verde); margin-right: 3mm; }
+  h3 { font-size: 13pt; margin: 7mm 0 2mm; }
+  h4 { font-size: 11pt; margin: 5mm 0 1.5mm; }
+  p { margin: 0 0 3mm; }
+  ul, ol { margin: 0 0 3mm; padding-left: 6mm; }
+  li { margin-bottom: 1mm; }
+  strong { color: var(--tinta); }
+  code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 9.2pt; background: #f1f5f9; padding: 0.3mm 1.2mm; border-radius: 1mm; color: #0f172a; }
+  pre { font-family: Consolas, "Cascadia Mono", monospace; font-size: 8.8pt; line-height: 1.45; background: #0f172a; color: #e2e8f0; padding: 3.5mm 4mm; border-radius: 2mm; margin: 2mm 0 4mm; white-space: pre-wrap; break-inside: avoid; }
+  pre .c { color: #94a3b8; } pre .k { color: #c4b5fd; } pre .s { color: #86efac; } pre .h { color: #fde68a; }
+  pre .arq { display: block; color: #94a3b8; font-size: 8pt; margin-bottom: 1.5mm; border-bottom: 1px solid #334155; padding-bottom: 1mm; }
+  table { width: 100%; border-collapse: collapse; margin: 2mm 0 4mm; font-size: 9.5pt; break-inside: avoid; }
+  th { background: var(--tinta); color: #fff; text-align: left; padding: 1.8mm 2.5mm; font-weight: 600; }
+  td { border-bottom: 1px solid var(--borda); padding: 1.6mm 2.5mm; vertical-align: top; }
+  tr:nth-child(even) td { background: var(--fundo); }
+  .box { border-radius: 2mm; padding: 3mm 4mm; margin: 3mm 0 4mm; break-inside: avoid; }
+  .box > :last-child { margin-bottom: 0; }
+  .box .t { font-weight: 700; display: block; margin-bottom: 1mm; font-size: 9pt; letter-spacing: 0.06em; text-transform: uppercase; }
+  .conceito { background: var(--azul-fundo); border-left: 1.2mm solid var(--azul); } .conceito .t { color: var(--azul); }
+  .pratica { background: var(--verde-fundo); border-left: 1.2mm solid var(--verde); } .pratica .t { color: var(--verde); }
+  .atencao { background: var(--ambar-fundo); border-left: 1.2mm solid #f59e0b; } .atencao .t { color: var(--ambar); }
+  .analogia { background: #faf5ff; border-left: 1.2mm solid #7c3aed; } .analogia .t { color: #7c3aed; }
+  .fig { margin: 3mm 0 5mm; text-align: center; break-inside: avoid; }
+  .fig svg { max-width: 100%; height: auto; }
+  .fig .leg { font-size: 8.5pt; color: var(--suave); margin-top: 1mm; }
+  .fig table td { text-align: left; }
+  .url { font-family: Consolas, "Cascadia Mono", monospace; font-size: 9.3pt; text-align: center; background: #f1f5f9; padding: 3mm; border-radius: 2mm; color: #0f172a; word-break: break-all; }
+  .kicker { color: var(--verde); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 9pt; }
+  .duas { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .passos { counter-reset: p; list-style: none; padding: 0; }
+  .passos > li { counter-increment: p; position: relative; padding-left: 9mm; margin-bottom: 2.5mm; break-inside: avoid; }
+  .passos > li::before { content: counter(p); position: absolute; left: 0; top: 0.2mm; width: 6mm; height: 6mm; border-radius: 50%; background: var(--verde); color: #fff; font-weight: 700; font-size: 8.5pt; text-align: center; line-height: 6mm; }
+  .capa { height: 290mm; display: flex; flex-direction: column; justify-content: space-between; background: #0b1120; color: #cbd5e1; margin: 0; padding: 40mm 24mm 24mm; break-after: page; }
+  .capa h1 { color: #fff; font-size: 34pt; margin: 6mm 0 4mm; line-height: 1.12; }
+  .capa h1 em { color: #34d399; font-style: normal; }
+  .capa .logo { display: inline-flex; align-items: center; gap: 3mm; color: #fff; font-size: 18pt; font-weight: 700; }
+  .capa .logo span { display: inline-grid; place-items: center; width: 11mm; height: 11mm; border-radius: 3mm; background: var(--verde); }
+  .capa .sub { font-size: 13pt; color: #94a3b8; max-width: 140mm; }
+  .capa .meta { font-size: 9.5pt; color: #64748b; }
+  .sumario { columns: 2; column-gap: 8mm; padding: 0; list-style: none; font-size: 10.5pt; }
+  .sumario li { margin-bottom: 1.6mm; break-inside: avoid; }
+  .sumario b { color: var(--verde); display: inline-block; width: 7mm; }
+  .glos dt { font-weight: 700; color: var(--tinta); margin-top: 2mm; }
+  .glos dd { margin: 0 0 1mm 0; }
+  .q { break-inside: avoid; margin-bottom: 3.5mm; }
+  .q b { display: block; color: var(--tinta); }
+</style>
+</head>
+<body>
+
+<!-- ============ CAPA ============ -->
+<section class="capa">
+  <div>
+    <div class="logo"><span>C</span> ConFin</div>
+    <h1>O ConFin <em>por dentro</em>:<br>guia de estudo do projeto</h1>
+    <p class="sub">Arquitetura, linguagem, front-end, back-end, tempo real, banco de dados e hospedagem, explicados a partir do código que nós escrevemos.</p>
+  </div>
+  <div class="meta">
+    Projeto Integrador II · Análise e Desenvolvimento de Sistemas · FATEC · 2026<br>
+    Israel Batista de Faria · Gabriel Piva Garcia Coral · Luis Felipe Pereira · Mateus Rogério de Souza<br>
+    Repositório: github.com/mateusrogerio100/confin · App: confin-qetu.onrender.com
+  </div>
+</section>
+
+<!-- ============ SUMÁRIO ============ -->
+<p class="kicker">Antes de começar</p>
+<h1 style="font-size:22pt;margin:1mm 0 4mm">Como usar este guia</h1>
+<p>Este guia explica <strong>como o ConFin funciona de verdade</strong>. Cada conceito vem acompanhado do arquivo e do trecho de código do nosso repositório onde ele aparece. A melhor forma de estudar é ler um capítulo com o VS Code aberto ao lado, abrindo cada arquivo citado. Os trechos de código foram resumidos para caber na página, e o guia descreve o repositório em novembro de 2026 (versão do pitch). Se o código mudar, vale sempre o arquivo original.</p>
+<div class="duas">
+  <div class="box conceito"><span class="t">Conceito</span>A teoria: o que é e para que serve. Vale para qualquer projeto.</div>
+  <div class="box pratica"><span class="t">No ConFin</span>Onde e como o conceito aparece no nosso código.</div>
+  <div class="box analogia"><span class="t">Analogia</span>Uma comparação com o mundo real para fixar a ideia.</div>
+  <div class="box atencao"><span class="t">Atenção</span>Armadilhas comuns, limitações e pontos de melhoria.</div>
+</div>
+<h3>Sumário</h3>
+<ul class="sumario">
+  <li><b>1</b>Visão geral: o mapa do sistema</li>
+  <li><b>2</b>A linguagem: JavaScript</li>
+  <li><b>3</b>Arquitetura: como as peças se organizam</li>
+  <li><b>4</b>Front-end: React, Vite, Tailwind e PWA</li>
+  <li><b>5</b>Back-end: Node.js, Express e a API REST</li>
+  <li><b>6</b>Autenticação e segurança: bcrypt e JWT</li>
+  <li><b>7</b>Tempo real: WebSocket e Socket.io</li>
+  <li><b>8</b>Banco de dados: PostgreSQL e o nosso modelo</li>
+  <li><b>9</b>Hospedagem: Render, Supabase e como se ligam</li>
+  <li><b>10</b>Uma despesa de ponta a ponta</li>
+  <li><b>11</b>Ferramentas do dia a dia: Git, npm, scripts</li>
+  <li><b>12</b>O que pode melhorar (e como aprender com isso)</li>
+  <li><b>13</b>Perguntas que a banca pode fazer</li>
+  <li><b>14</b>Exercícios práticos e trilha de estudo</li>
+  <li><b>15</b>Glossário</li>
+</ul>
+
+<!-- ============ 1 VISÃO GERAL ============ -->
+<h2 class="nova"><span class="num">1</span>Visão geral: o mapa do sistema</h2>
+<p>O ConFin é um <strong>sistema web</strong> dividido em três partes que conversam pela internet:</p>
+<div class="fig">
+<svg viewBox="0 0 680 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI" font-size="12">
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#059669"/></marker>
+  <marker id="b" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto"><path d="M8,0 L0,4 L8,8 z" fill="#059669"/></marker></defs>
+  <rect x="10" y="40" width="175" height="150" rx="12" fill="#fff" stroke="#cbd5e1"/>
+  <text x="25" y="65" fill="#059669" font-weight="700" font-size="10">1 · FRONT-END (CLIENTE)</text>
+  <text x="25" y="88" fill="#0f172a" font-weight="700" font-size="15">Navegador / celular</text>
+  <text x="25" y="112" fill="#334155">React + Vite + Tailwind</text>
+  <text x="25" y="130" fill="#334155">Recharts (gráficos)</text>
+  <text x="25" y="148" fill="#334155">PWA (instalável)</text>
+  <text x="25" y="172" fill="#64748b" font-size="10">pasta web/</text>
+  <rect x="250" y="20" width="200" height="190" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="265" y="45" fill="#059669" font-weight="700" font-size="10">2 · BACK-END (SERVIDOR) · RENDER</text>
+  <text x="265" y="68" fill="#0f172a" font-weight="700" font-size="15">Node.js + Express</text>
+  <text x="265" y="92" fill="#334155">API REST  /api/...</text>
+  <text x="265" y="110" fill="#334155">Socket.io (tempo real)</text>
+  <text x="265" y="128" fill="#334155">bcrypt + JWT (login)</text>
+  <text x="265" y="146" fill="#334155">Regras de negócio</text>
+  <text x="265" y="164" fill="#334155">Entrega o front compilado</text>
+  <text x="265" y="192" fill="#64748b" font-size="10">pasta api/</text>
+  <rect x="515" y="40" width="155" height="150" rx="12" fill="#fff" stroke="#cbd5e1"/>
+  <text x="530" y="65" fill="#059669" font-weight="700" font-size="10">3 · BANCO · SUPABASE</text>
+  <text x="530" y="88" fill="#0f172a" font-weight="700" font-size="15">PostgreSQL</text>
+  <text x="530" y="112" fill="#334155">familia · usuario</text>
+  <text x="530" y="130" fill="#334155">despesa · convite</text>
+  <text x="530" y="148" fill="#334155">regras: UNIQUE, CHECK</text>
+  <text x="530" y="172" fill="#64748b" font-size="10">api/db/schema.sql</text>
+  <line x1="190" y1="115" x2="245" y2="115" stroke="#059669" stroke-width="2.5" marker-end="url(#a)" marker-start="url(#b)"/>
+  <text x="217" y="105" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="700">HTTPS</text>
+  <text x="217" y="132" text-anchor="middle" fill="#64748b" font-size="9">REST + WS</text>
+  <line x1="455" y1="115" x2="510" y2="115" stroke="#059669" stroke-width="2.5" marker-end="url(#a)" marker-start="url(#b)"/>
+  <text x="482" y="105" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="700">SQL</text>
+  <text x="482" y="132" text-anchor="middle" fill="#64748b" font-size="9">com SSL</text>
+  <text x="340" y="240" text-anchor="middle" fill="#64748b" font-size="11">GitHub → (git push) → Render faz o build e publica sozinho</text>
+</svg>
+<div class="leg">Figura 1 — As três camadas do ConFin e como elas se comunicam.</div>
+</div>
+<ul>
+  <li><strong>Front-end</strong> é tudo o que o usuário <em>vê e toca</em>: as telas, os botões, os gráficos. Ele roda <strong>no navegador do usuário</strong> (no celular ou no computador).</li>
+  <li><strong>Back-end</strong> é o "cérebro" que fica <strong>num servidor na internet</strong>. Ele recebe os pedidos do front-end, aplica as regras (por exemplo, "o valor deve ser maior que zero"), conversa com o banco e responde.</li>
+  <li><strong>Banco de dados</strong> é onde as informações ficam <strong>guardadas de forma permanente</strong>: usuários, famílias e despesas.</li>
+</ul>
+<div class="box analogia"><span class="t">Analogia: um restaurante</span>
+O <strong>front-end</strong> é o salão e o cardápio: é com ele que o cliente interage. O <strong>back-end</strong> é a cozinha: recebe o pedido, segue as receitas (regras de negócio) e prepara a resposta. O <strong>banco de dados</strong> é a despensa, onde os ingredientes ficam guardados. O <strong>garçom</strong> que leva os pedidos é a <strong>API</strong>. O cliente nunca entra na despensa: tudo passa pela cozinha.</div>
+<h3>Estrutura de pastas do repositório</h3>
+<pre><span class="arq">raiz do projeto</span>api/                  <span class="c">← back-end (Node.js)</span>
+  db/schema.sql       <span class="c">← criação das tabelas do banco</span>
+  src/server.js       <span class="c">← ponto de partida: liga o Express e o Socket.io</span>
+  src/db.js           <span class="c">← conexão com o PostgreSQL</span>
+  src/auth.js         <span class="c">← JWT e permissões (middlewares)</span>
+  src/realtime.js     <span class="c">← Socket.io (salas por família)</span>
+  src/resumo.js       <span class="c">← lógica central do saldo e alertas</span>
+  src/util.js         <span class="c">← validações e constantes (categorias, meios)</span>
+  src/routes/         <span class="c">← auth.js, familias.js, despesas.js (os endpoints)</span>
+  scripts/            <span class="c">← banco local, seed (dados de demo), teste de fumaça</span>
+web/                  <span class="c">← front-end (React)</span>
+  src/main.jsx        <span class="c">← ponto de partida do React</span>
+  src/App.jsx         <span class="c">← rotas (qual tela mostrar)</span>
+  src/pages/          <span class="c">← Login, Onboarding, Dashboard, Historico, Familia</span>
+  src/components/     <span class="c">← peças reutilizáveis (Layout, DespesaSheet...)</span>
+  src/context/        <span class="c">← estado global: sessão, avisos, tempo real</span>
+  src/lib/            <span class="c">← api.js (chamadas HTTP), formatação, categorias</span>
+  vite.config.js      <span class="c">← configuração do Vite e do PWA</span>
+package.json          <span class="c">← scripts que comandam tudo (setup, build, start...)</span></pre>
+
+<!-- ============ 2 LINGUAGEM ============ -->
+<h2><span class="num">2</span>A linguagem: JavaScript</h2>
+<div class="box conceito"><span class="t">Conceito</span>
+<strong>JavaScript (JS)</strong> nasceu em 1995 para dar interatividade às páginas web e hoje é a <strong>única linguagem que os navegadores executam nativamente</strong>. Sua especificação oficial chama-se <strong>ECMAScript</strong> (por isso você vê nomes como "ES2015" ou "ES6"). É uma linguagem <strong>interpretada</strong> (na verdade, compilada "na hora", por JIT), de <strong>tipagem dinâmica</strong> (uma variável pode guardar qualquer tipo) e <strong>multiparadigma</strong> (aceita estilo funcional e orientado a objetos).</div>
+<h3>Um JavaScript, dois "lugares" para rodar</h3>
+<p>Uma linguagem precisa de um <strong>ambiente de execução</strong> (<em>runtime</em>) que leia e execute o código. O JavaScript tem dois ambientes principais, e o ConFin usa os dois:</p>
+<table>
+  <tr><th>Ambiente</th><th>Onde roda</th><th>O que consegue fazer</th><th>No ConFin</th></tr>
+  <tr><td><strong>Navegador</strong><br>(Chrome, Safari...)</td><td>No aparelho do usuário</td><td>Manipular a tela (DOM), clicar, mostrar gráficos, guardar dados no <code>localStorage</code></td><td>Pasta <code>web/</code></td></tr>
+  <tr><td><strong>Node.js</strong></td><td>No servidor</td><td>Ler arquivos, abrir portas de rede, conectar a bancos de dados. Não tem tela.</td><td>Pasta <code>api/</code></td></tr>
+</table>
+<p><strong>Por que escolhemos uma única linguagem?</strong> Com JavaScript nos dois lados, a equipe estuda uma linguagem só, reaproveita conhecimento (o mesmo <code>async/await</code>, o mesmo JSON) e troca de "lado" sem mudar de mentalidade. Essa combinação é tão comum que tem nome: <em>JavaScript full-stack</em>.</p>
+
+<h3>Recursos da linguagem que aparecem muito no nosso código</h3>
+<h4>Módulos (import / export)</h4>
+<p>Cada arquivo é um <strong>módulo</strong> que exporta funções e importa as de outros arquivos. Isso organiza o código em partes pequenas e com responsabilidade clara. Usamos o padrão moderno <strong>ESM</strong>, ativado por <code>"type": "module"</code> no <code>package.json</code>.</p>
+<pre><span class="arq">api/src/routes/despesas.js</span><span class="k">import</span> { query } <span class="k">from</span> <span class="s">'../db.js'</span>;            <span class="c">// pega a função query de outro arquivo</span>
+<span class="k">import</span> { notificarFamilia } <span class="k">from</span> <span class="s">'../realtime.js'</span>;
+...
+<span class="k">export default</span> router;                       <span class="c">// entrega o roteador para o server.js</span></pre>
+<h4>Funções assíncronas (async / await)</h4>
+<p>Falar com o banco ou com a internet <strong>leva tempo</strong> (milissegundos que, para um computador, são uma eternidade). Em vez de travar esperando, o JavaScript usa <strong>Promises</strong>: "prometo te entregar o resultado quando ficar pronto". O <code>await</code> escreve isso de um jeito que parece sequencial:</p>
+<pre><span class="arq">api/src/routes/auth.js (login)</span><span class="k">const</span> { rows } = <span class="k">await</span> query(<span class="s">'SELECT * FROM usuario WHERE email = $1'</span>, [email]);
+<span class="k">if</span> (!usuario || !(<span class="k">await</span> bcrypt.compare(senha, usuario.senha_hash))) { ... }</pre>
+<div class="box conceito"><span class="t">Conceito: event loop</span>
+O Node.js executa seu código em <strong>uma única thread</strong>, mas não fica parado esperando o banco. Enquanto uma consulta está "em voo", ele atende outros usuários. Quando a resposta chega, o <strong>event loop</strong> retoma a função de onde o <code>await</code> parou. Por isso um servidor Node simples aguenta muitas conexões simultâneas, desde que o código não faça contas pesadas que bloqueiem a thread.</div>
+<h4>Desestruturação, spread e template strings</h4>
+<pre><span class="k">const</span> { familia_id, id: usuario_id } = req.usuario;   <span class="c">// pega campos de um objeto</span>
+<span class="k">const</span> despesa = { ...rows[<span class="h">0</span>], usuario_nome: req.usuario.nome }; <span class="c">// copia e acrescenta</span>
+socket.join(<span class="s">`familia:${familia_id}`</span>);                <span class="c">// texto com variável dentro</span></pre>
+<h4>JSON: o idioma da conversa</h4>
+<p><strong>JSON</strong> (<em>JavaScript Object Notation</em>) é o formato de texto que o front-end e o back-end usam para trocar dados. Por exemplo, quando o Carlos salva uma despesa, o celular envia:</p>
+<pre>{ <span class="s">"valor"</span>: <span class="h">420.90</span>, <span class="s">"categoria"</span>: <span class="s">"MERCADO"</span>, <span class="s">"meio_pagamento"</span>: <span class="s">"PIX"</span>, <span class="s">"data"</span>: <span class="s">"2026-11-09"</span>, <span class="s">"descricao"</span>: <span class="s">"Compra do mês"</span> }</pre>
+<div class="box atencao"><span class="t">Atenção</span>
+Por ter tipagem dinâmica, o JavaScript não avisa quando você passa um texto onde esperava um número. Por isso o ConFin <strong>valida tudo</strong> o que chega na API (veja <code>util.js</code>). Projetos maiores costumam usar <strong>TypeScript</strong>, um JavaScript com tipos verificados antes de rodar. É um ótimo próximo passo de estudo.</div>
+
+<!-- ============ 3 ARQUITETURA ============ -->
+<h2><span class="num">3</span>Arquitetura: como as peças se organizam</h2>
+<p><strong>Arquitetura de software</strong> é a forma como dividimos o sistema em partes e definimos como elas se comunicam. O ConFin combina alguns padrões clássicos:</p>
+<h3>3.1 Cliente-servidor</h3>
+<p>O <strong>cliente</strong> (o navegador) faz pedidos e o <strong>servidor</strong> (a API) responde. O cliente nunca acessa o banco diretamente: tudo passa pelo servidor, que é quem aplica as regras e as permissões. Isso é fundamental para a segurança, porque o código que roda no navegador pode ser lido e alterado por qualquer pessoa.</p>
+<h3>3.2 Arquitetura em três camadas</h3>
+<table>
+  <tr><th>Camada</th><th>Responsabilidade</th><th>No ConFin</th></tr>
+  <tr><td><strong>Apresentação</strong></td><td>Mostrar dados e capturar ações do usuário</td><td>React (<code>web/src/pages</code>, <code>components</code>)</td></tr>
+  <tr><td><strong>Aplicação / negócio</strong></td><td>Validar, aplicar regras, controlar permissões</td><td>Express (<code>api/src/routes</code>, <code>resumo.js</code>, <code>auth.js</code>)</td></tr>
+  <tr><td><strong>Dados</strong></td><td>Guardar e recuperar informações com integridade</td><td>PostgreSQL (<code>schema.sql</code>)</td></tr>
+</table>
+<h3>3.3 SPA: aplicação de página única</h3>
+<p>O ConFin é uma <strong>SPA</strong> (<em>Single Page Application</em>). O navegador baixa <strong>uma vez</strong> o HTML, o CSS e o JavaScript do app. Depois disso, ao trocar de tela (Início → Histórico), a página <strong>não recarrega</strong>: o React só redesenha a parte que mudou e busca os <strong>dados</strong> (não as telas) na API. Isso deixa a navegação rápida, como num aplicativo nativo.</p>
+<h3>3.4 API REST</h3>
+<p>O "contrato" entre front e back é uma <strong>API REST</strong>: cada recurso tem um endereço (<code>/api/despesas</code>) e usamos os <strong>verbos HTTP</strong> para dizer o que queremos fazer com ele (detalhes no capítulo 5).</p>
+<h3>3.5 Monólito modular com um único deploy</h3>
+<p>Em produção, o próprio servidor Node.js também <strong>entrega os arquivos do front-end</strong> já compilados (a pasta <code>web/dist</code>). Assim o ConFin inteiro roda num <strong>único serviço</strong>, com <strong>um único endereço</strong>. Isso é um <strong>monólito</strong>: uma aplicação só. Ele é bem organizado em módulos (rotas, autenticação, tempo real, resumo), o que se chama de "monólito modular".</p>
+<pre><span class="arq">api/src/server.js</span><span class="c">// Em produção a própria API serve o front-end compilado (web/dist): um único deploy.</span>
+<span class="k">if</span> (existsSync(webDist)) {
+  app.use(express.static(webDist));                         <span class="c">// arquivos .js, .css, imagens</span>
+  app.get(<span class="s">/^\/(?!api|socket\.io).*/</span>, (_req, res) =&gt;          <span class="c">// qualquer outra rota...</span>
+    res.sendFile(path.join(webDist, <span class="s">'index.html'</span>)));      <span class="c">// ...devolve o app React</span>
+}</pre>
+<div class="box conceito"><span class="t">Conceito: por que "qualquer outra rota devolve o index.html"?</span>
+Numa SPA, endereços como <code>/historico</code> não existem como arquivos no servidor: quem decide o que mostrar é o React Router, no navegador. Se o usuário der F5 em <code>/historico</code>, o servidor precisa devolver o <code>index.html</code> para o React assumir. A expressão regular <code>(?!api|socket\.io)</code> garante que as rotas da API não sejam capturadas por essa regra.</div>
+<div class="box atencao"><span class="t">Monólito × microsserviços</span>
+Grandes empresas às vezes dividem o sistema em muitos serviços independentes (<strong>microsserviços</strong>). Para um time pequeno e um MVP, isso só traria complexidade (vários deploys, comunicação entre serviços, monitoramento). O monólito é a escolha certa aqui, e quase todo sistema começa assim.</div>
+
+<!-- ============ 4 FRONT-END ============ -->
+<h2><span class="num">4</span>Front-end: React, Vite, Tailwind e PWA</h2>
+<h3>4.1 React: a interface feita de componentes</h3>
+<div class="box conceito"><span class="t">Conceito</span>
+<strong>React</strong> é uma biblioteca (criada pelo Facebook/Meta) para construir interfaces a partir de <strong>componentes</strong>: funções que recebem dados e devolvem "pedaços de tela". Você descreve <em>como a tela deve ficar</em> para um certo estado, e o React cuida de atualizar o navegador quando o estado muda. Isso se chama <strong>programação declarativa</strong>.</div>
+<p>Os componentes são escritos em <strong>JSX</strong>, uma sintaxe que mistura JavaScript com algo parecido com HTML:</p>
+<pre><span class="arq">exemplo simplificado</span><span class="k">function</span> <span class="h">CartaoSaldo</span>({ saldo, percentual }) {
+  <span class="k">return</span> (
+    &lt;section className=<span class="s">"card"</span>&gt;
+      &lt;p&gt;Saldo disponível&lt;/p&gt;
+      &lt;p className=<span class="s">"text-4xl"</span>&gt;{brl(saldo)}&lt;/p&gt;      <span class="c">{/* JavaScript dentro de { } */}</span>
+      {percentual &gt;= <span class="h">80</span> &amp;&amp; &lt;span&gt;Atenção: acima de 80%&lt;/span&gt;}
+    &lt;/section&gt;
+  );
+}</pre>
+<h4>Estado e hooks</h4>
+<p><strong>Estado</strong> é a informação que, quando muda, faz a tela mudar. No React, guardamos estado com <strong>hooks</strong>, funções especiais que começam com <code>use</code>:</p>
+<ul>
+  <li><code>useState</code>: guarda um valor (por exemplo, o mês selecionado no Dashboard).</li>
+  <li><code>useEffect</code>: executa algo <em>depois</em> de desenhar a tela, como buscar dados na API. Ele roda de novo quando alguma das suas <strong>dependências</strong> muda.</li>
+  <li><code>useContext</code>: lê um estado global compartilhado por várias telas.</li>
+</ul>
+<pre><span class="arq">web/src/pages/Dashboard.jsx (simplificado)</span><span class="k">const</span> { versao } = useApp();                   <span class="c">// muda a cada evento em tempo real</span>
+useEffect(() =&gt; {
+  api(<span class="s">`/despesas/resumo?mes=${mes}`</span>).then(setResumo);  <span class="c">// busca os dados do painel</span>
+}, [mes, versao]);                                <span class="c">// ...de novo se o mês ou a versão mudar</span></pre>
+<div class="box pratica"><span class="t">No ConFin: o truque da "versão"</span>
+Quando chega um aviso em tempo real ("o Carlos registrou uma despesa"), o <code>AppContext</code> apenas <strong>soma 1 na variável <code>versao</code></strong>. Como o Dashboard tem <code>versao</code> nas dependências do <code>useEffect</code>, ele busca o resumo atualizado sozinho. Assim, qualquer tela que precise reagir a mudanças só precisa "olhar" para a versão.</div>
+<h4>Context: estado global</h4>
+<p>Algumas informações são usadas no app inteiro. Em vez de passá-las de componente em componente, usamos <strong>Context</strong>. O ConFin tem três:</p>
+<table>
+  <tr><th>Context</th><th>Guarda</th></tr>
+  <tr><td><code>AuthContext</code></td><td>O usuário logado, login, cadastro e logout</td></tr>
+  <tr><td><code>ToastContext</code></td><td>Os avisos que aparecem no topo ("Carlos registrou R$ 420,90")</td></tr>
+  <tr><td><code>AppContext</code></td><td>A conexão de tempo real, a <code>versao</code>, o indicador "Ao vivo" e o formulário de nova despesa</td></tr>
+</table>
+<h4>Rotas: qual tela mostrar</h4>
+<p>O <strong>React Router</strong> associa endereços a telas. No <code>App.jsx</code>, as rotas mudam conforme a situação do usuário, o que implementa o fluxo de navegação da documentação (seção 7.1):</p>
+<pre><span class="arq">web/src/App.jsx (resumido)</span><span class="k">if</span> (!usuario) <span class="c">// não logado → só a tela de login</span>
+  <span class="k">return</span> &lt;Routes&gt;&lt;Route path=<span class="s">"/login"</span> element={&lt;Login /&gt;} /&gt; ...&lt;/Routes&gt;;
+<span class="k">if</span> (!usuario.familia_id) <span class="c">// logado, sem família → onboarding (criar ou entrar)</span>
+  <span class="k">return</span> &lt;Routes&gt;&lt;Route path=<span class="s">"/bem-vindo"</span> element={&lt;Onboarding /&gt;} /&gt; ...&lt;/Routes&gt;;
+<span class="c">// com família → app completo: Início, Histórico, Família</span></pre>
+<h3>4.2 Como o front-end conversa com a API</h3>
+<p>Todas as chamadas passam por <strong>uma única função</strong>, <code>api()</code>, em <code>web/src/lib/api.js</code>. Centralizar evita repetir código e garante que <strong>toda</strong> chamada leve o token de login e trate erros do mesmo jeito:</p>
+<pre><span class="arq">web/src/lib/api.js (resumido)</span><span class="k">export async function</span> <span class="h">api</span>(rota, { method = <span class="s">'GET'</span>, body } = {}) {
+  <span class="k">const</span> token = tokenStore.get();                     <span class="c">// JWT guardado no localStorage</span>
+  <span class="k">const</span> res = <span class="k">await</span> fetch(<span class="s">'/api'</span> + rota, {
+    method,
+    headers: { Authorization: <span class="s">`Bearer ${token}`</span>, <span class="s">'Content-Type'</span>: <span class="s">'application/json'</span> },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  <span class="k">if</span> (res.status === <span class="h">401</span>) ... <span class="c">// sessão expirada → volta para o login</span>
+}</pre>
+<h3>4.3 Vite: a ferramenta de desenvolvimento e build</h3>
+<p>O navegador não entende JSX diretamente. O <strong>Vite</strong> faz duas coisas:</p>
+<ul>
+  <li><strong>Em desenvolvimento</strong> (<code>npm run dev:web</code>): sobe um servidor em <code>localhost:5173</code> que converte o código na hora e atualiza a tela assim que você salva um arquivo, sem perder o estado. Isso se chama <strong>HMR</strong> (<em>Hot Module Replacement</em>).</li>
+  <li><strong>No build</strong> (<code>npm run build</code>): gera a pasta <code>web/dist</code> com arquivos otimizados, isto é, <strong>minificados</strong> (sem espaços e com nomes curtos) e agrupados. É essa pasta que vai para produção.</li>
+</ul>
+<div class="box pratica"><span class="t">No ConFin: o proxy do Vite</span>
+Em desenvolvimento, o front roda na porta 5173 e a API na 3333. Para o front poder chamar <code>/api</code> como se fosse o mesmo endereço, o <code>vite.config.js</code> tem um <strong>proxy</strong> que repassa <code>/api</code> e <code>/socket.io</code> para a porta 3333. Em produção não é preciso proxy, porque tudo já está no mesmo endereço (seção 3.5).</div>
+<h3>4.4 Tailwind CSS: estilo com classes utilitárias</h3>
+<p>Em vez de escrever arquivos CSS separados, o <strong>Tailwind</strong> oferece classes pequenas que aplicamos direto no JSX: <code>p-4</code> (espaçamento interno), <code>rounded-2xl</code> (cantos arredondados), <code>text-4xl</code> (texto grande), <code>dark:bg-slate-900</code> (cor no modo escuro). No build, o Tailwind gera um CSS só com as classes realmente usadas. No <code>web/src/index.css</code> criamos as nossas próprias classes (<code>card</code>, <code>btn-primary</code>, <code>input</code>) com <code>@utility</code>, para padronizar o visual.</p>
+<p><strong>Mobile first</strong> (RNF002): escrevemos o estilo pensando primeiro no celular e acrescentamos ajustes para telas maiores com prefixos como <code>lg:</code>. Por isso, no celular aparece a barra inferior com o botão "+" e, no computador, o menu lateral.</p>
+<h3>4.5 Recharts e lucide-react</h3>
+<p><strong>Recharts</strong> desenha os gráficos do Dashboard (a rosca de categorias e as barras dos últimos 6 meses) a partir de arrays de dados. <strong>lucide-react</strong> fornece os ícones como componentes. As cores das categorias seguem uma paleta testada para <strong>daltonismo</strong> (<code>web/src/lib/categorias.js</code>), e vermelho e âmbar ficam reservados para os alertas.</p>
+<h3>4.6 PWA: um site que vira aplicativo</h3>
+<div class="box conceito"><span class="t">Conceito</span>
+<strong>PWA</strong> (<em>Progressive Web App</em>) é um site que o celular pode <strong>instalar</strong> como um aplicativo: com ícone na tela inicial, abrindo em tela cheia, sem passar pela Play Store ou App Store. Ele precisa de dois ingredientes: um <strong>manifest</strong> (nome, ícones, cores) e um <strong>service worker</strong>, um script que roda em segundo plano e guarda em cache os arquivos do app.</div>
+<p>O plugin <code>vite-plugin-pwa</code> gera os dois automaticamente a partir do <code>vite.config.js</code>. A regra <code>navigateFallbackDenylist</code> impede que o cache "engula" as chamadas à API e ao Socket.io, que sempre precisam ir ao servidor.</p>
+
+<!-- ============ 5 BACK-END ============ -->
+<h2><span class="num">5</span>Back-end: Node.js, Express e a API REST</h2>
+<h3>5.1 Node.js</h3>
+<p><strong>Node.js</strong> é o ambiente que executa JavaScript fora do navegador, usando o mesmo motor do Chrome (V8). Ele traz módulos para rede (<code>node:http</code>), arquivos (<code>node:fs</code>) e caminhos (<code>node:path</code>). Usamos o Node 22 ou superior, que já lê o arquivo <code>.env</code> sozinho (<code>--env-file-if-exists=.env</code>) e reinicia ao salvar (<code>--watch</code>), sem precisar de bibliotecas extras.</p>
+<h3>5.2 Express: o framework web</h3>
+<p><strong>Express</strong> é um framework minimalista que facilita duas coisas: definir <strong>rotas</strong> (qual código roda para cada endereço e verbo) e encadear <strong>middlewares</strong>.</p>
+<div class="box conceito"><span class="t">Conceito: middleware</span>
+Um <strong>middleware</strong> é uma função que fica "no meio do caminho" da requisição. Ela pode ler e modificar o pedido, barrá-lo com um erro ou passá-lo adiante com <code>next()</code>. As requisições atravessam uma <strong>fila de middlewares</strong>, como numa linha de montagem.</div>
+<div class="fig">
+<svg viewBox="0 0 680 120" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI" font-size="11">
+  <defs><marker id="c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#059669"/></marker></defs>
+  <g>
+    <rect x="5" y="30" width="88" height="54" rx="8" fill="#f1f5f9" stroke="#cbd5e1"/><text x="49" y="53" text-anchor="middle" font-weight="700" fill="#0f172a">Requisição</text><text x="49" y="70" text-anchor="middle" fill="#64748b" font-size="9.5">POST /api/despesas</text>
+    <rect x="113" y="30" width="80" height="54" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="153" y="53" text-anchor="middle" font-weight="700" fill="#0f172a">cors</text><text x="153" y="70" text-anchor="middle" fill="#64748b" font-size="9.5">origem ok?</text>
+    <rect x="213" y="30" width="88" height="54" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="257" y="53" text-anchor="middle" font-weight="700" fill="#0f172a">express.json</text><text x="257" y="70" text-anchor="middle" fill="#64748b" font-size="9.5">lê o JSON</text>
+    <rect x="321" y="30" width="88" height="54" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="365" y="53" text-anchor="middle" font-weight="700" fill="#0f172a">autenticar</text><text x="365" y="70" text-anchor="middle" fill="#64748b" font-size="9.5">token válido?</text>
+    <rect x="429" y="30" width="96" height="54" rx="8" fill="#fff" stroke="#cbd5e1"/><text x="477" y="53" text-anchor="middle" font-weight="700" fill="#0f172a">exigirFamilia</text><text x="477" y="70" text-anchor="middle" fill="#64748b" font-size="9.5">tem família?</text>
+    <rect x="545" y="30" width="130" height="54" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/><text x="610" y="53" text-anchor="middle" font-weight="700" fill="#0f172a">handler da rota</text><text x="610" y="70" text-anchor="middle" fill="#64748b" font-size="9.5">valida, grava, responde</text>
+    <line x1="94" y1="57" x2="110" y2="57" stroke="#059669" stroke-width="2" marker-end="url(#c)"/>
+    <line x1="194" y1="57" x2="210" y2="57" stroke="#059669" stroke-width="2" marker-end="url(#c)"/>
+    <line x1="302" y1="57" x2="318" y2="57" stroke="#059669" stroke-width="2" marker-end="url(#c)"/>
+    <line x1="410" y1="57" x2="426" y2="57" stroke="#059669" stroke-width="2" marker-end="url(#c)"/>
+    <line x1="526" y1="57" x2="542" y2="57" stroke="#059669" stroke-width="2" marker-end="url(#c)"/>
+    <text x="340" y="108" text-anchor="middle" fill="#b45309" font-size="10.5">Se qualquer etapa lançar um erro → o tratador central de erros responde (ex.: 401, 403, 400)</text>
+  </g>
+</svg>
+<div class="leg">Figura 2 — O caminho de uma requisição pelos middlewares do Express.</div>
+</div>
+<pre><span class="arq">api/src/server.js</span>app.use(cors(...));                             <span class="c">// 1. quem pode chamar a API</span>
+app.use(express.json({ limit: <span class="s">'100kb'</span> }));      <span class="c">// 2. transforma o corpo JSON em objeto</span>
+app.get(<span class="s">'/api/health'</span>, (_req, res) =&gt; res.json({ ok: <span class="k">true</span> }));
+app.use(<span class="s">'/api/auth'</span>, authRoutes);               <span class="c">// 3. grupos de rotas</span>
+app.use(<span class="s">'/api/familias'</span>, familiaRoutes);
+app.use(<span class="s">'/api/despesas'</span>, despesaRoutes);
+
+<span class="arq">api/src/routes/despesas.js</span><span class="k">const</span> router = Router();
+router.use(autenticar, exigirFamilia);          <span class="c">// vale para TODAS as rotas de despesas</span></pre>
+<h3>5.3 REST: verbos, rotas e códigos de status</h3>
+<p><strong>REST</strong> é um estilo de API em que tratamos tudo como <strong>recursos</strong> com endereços, e usamos os verbos do HTTP com significado:</p>
+<table>
+  <tr><th>Verbo</th><th>Significado</th><th>Exemplo no ConFin</th></tr>
+  <tr><td><code>GET</code></td><td>Ler (não altera nada)</td><td><code>GET /api/despesas/resumo?mes=2026-11</code></td></tr>
+  <tr><td><code>POST</code></td><td>Criar</td><td><code>POST /api/despesas</code> (RF002)</td></tr>
+  <tr><td><code>PUT</code></td><td>Substituir/editar por completo</td><td><code>PUT /api/despesas/42</code></td></tr>
+  <tr><td><code>PATCH</code></td><td>Alterar parte</td><td><code>PATCH /api/familias/minha</code> (limite)</td></tr>
+  <tr><td><code>DELETE</code></td><td>Apagar</td><td><code>DELETE /api/despesas/42</code></td></tr>
+</table>
+<p>A resposta sempre traz um <strong>código de status</strong>, que diz ao front-end o que aconteceu:</p>
+<table>
+  <tr><th>Código</th><th>Quer dizer</th><th>Quando o ConFin usa</th></tr>
+  <tr><td><code>200</code> OK</td><td>Deu certo</td><td>Login, listagens</td></tr>
+  <tr><td><code>201</code> Created</td><td>Criado com sucesso</td><td>Nova despesa, cadastro</td></tr>
+  <tr><td><code>204</code> No Content</td><td>Deu certo, sem corpo</td><td>Excluir despesa</td></tr>
+  <tr><td><code>400</code> Bad Request</td><td>Dados inválidos</td><td>Valor ≤ 0 (RN002), categoria inválida</td></tr>
+  <tr><td><code>401</code> Unauthorized</td><td>Não autenticado</td><td>Sem token, senha errada, token expirado</td></tr>
+  <tr><td><code>403</code> Forbidden</td><td>Autenticado, mas sem permissão</td><td>Membro tentando mudar o limite (RN003)</td></tr>
+  <tr><td><code>404</code> Not Found</td><td>Não existe</td><td>Despesa de outra família</td></tr>
+  <tr><td><code>409</code> Conflict</td><td>Conflito com o que já existe</td><td>E-mail já cadastrado (RN001)</td></tr>
+  <tr><td><code>500</code></td><td>Erro inesperado no servidor</td><td>Bug ou banco fora do ar</td></tr>
+</table>
+<h3>5.4 Validação: nunca confie no cliente</h3>
+<p>O formulário do app já impede valores negativos, mas qualquer pessoa pode chamar a API diretamente (com o Postman, por exemplo) e pular o formulário. Por isso <strong>a API valida tudo de novo</strong>:</p>
+<pre><span class="arq">api/src/util.js</span><span class="c">/** Valida valor monetário. RN002: precisa ser positivo. */</span>
+<span class="k">export function</span> <span class="h">validarValor</span>(valor) {
+  <span class="k">const</span> n = Number(valor);
+  <span class="k">if</span> (!Number.isFinite(n)) <span class="k">throw new</span> HttpError(<span class="h">400</span>, <span class="s">'Valor inválido.'</span>);
+  <span class="k">if</span> (n &lt;= <span class="h">0</span>) <span class="k">throw new</span> HttpError(<span class="h">400</span>, <span class="s">'O valor deve ser maior que zero.'</span>);
+  <span class="k">return</span> Math.round(n * <span class="h">100</span>) / <span class="h">100</span>;            <span class="c">// arredonda para centavos</span>
+}</pre>
+<p>E o banco valida <strong>uma terceira vez</strong>, com <code>CHECK (valor &gt; 0)</code>. São três camadas de defesa: formulário (experiência do usuário), API (segurança) e banco (integridade, a última barreira).</p>
+<h3>5.5 Tratamento central de erros</h3>
+<p>Em vez de cada rota tratar seus erros, elas simplesmente <strong>lançam</strong> um <code>HttpError(status, mensagem)</code>. O Express 5 captura erros de funções <code>async</code> e entrega tudo a <strong>um único tratador</strong> no fim do <code>server.js</code>, que também traduz códigos do PostgreSQL:</p>
+<pre><span class="arq">api/src/server.js</span>app.use((err, _req, res, _next) =&gt; {
+  <span class="k">if</span> (err.status) <span class="k">return</span> res.status(err.status).json({ erro: err.message });
+  <span class="k">if</span> (err.code === <span class="s">'23505'</span>) <span class="k">return</span> res.status(<span class="h">409</span>).json({ erro: <span class="s">'Registro duplicado.'</span> }); <span class="c">// UNIQUE</span>
+  <span class="k">if</span> (err.code === <span class="s">'23514'</span>) <span class="k">return</span> res.status(<span class="h">400</span>).json({ erro: <span class="s">'Dados inválidos.'</span> });   <span class="c">// CHECK</span>
+  console.error(err);
+  res.status(<span class="h">500</span>).json({ erro: <span class="s">'Erro interno do servidor.'</span> });  <span class="c">// nunca expõe detalhes internos</span>
+});</pre>
+<h3>5.6 Mapa completo de endpoints</h3>
+<table>
+  <tr><th>Método e rota</th><th>O que faz</th><th>Quem pode</th></tr>
+  <tr><td><code>POST /api/auth/register</code></td><td>Cadastro (RF001)</td><td>Qualquer um</td></tr>
+  <tr><td><code>POST /api/auth/login</code></td><td>Login, devolve o JWT</td><td>Qualquer um</td></tr>
+  <tr><td><code>GET /api/auth/me</code></td><td>Dados do usuário logado</td><td>Logado</td></tr>
+  <tr><td><code>POST /api/familias</code></td><td>Criar família (vira admin)</td><td>Logado sem família</td></tr>
+  <tr><td><code>POST /api/familias/entrar</code></td><td>Entrar com código de convite</td><td>Logado sem família</td></tr>
+  <tr><td><code>GET · PATCH /api/familias/minha</code></td><td>Ver família / mudar nome e limite</td><td>Membro / admin</td></tr>
+  <tr><td><code>POST /api/familias/minha/codigo</code></td><td>Gerar novo código</td><td>Admin (RN003)</td></tr>
+  <tr><td><code>POST · DELETE …/minha/convites</code></td><td>Convidar por e-mail / cancelar</td><td>Admin</td></tr>
+  <tr><td><code>DELETE …/minha/membros/:id</code></td><td>Remover membro</td><td>Admin</td></tr>
+  <tr><td><code>POST /api/familias/minha/sair</code></td><td>Sair da família</td><td>Membro</td></tr>
+  <tr><td><code>GET /api/despesas</code></td><td>Histórico com filtros</td><td>Membro</td></tr>
+  <tr><td><code>GET /api/despesas/resumo</code></td><td>Dados do Dashboard (RF004)</td><td>Membro</td></tr>
+  <tr><td><code>POST /api/despesas</code></td><td>Registrar despesa (RF002)</td><td>Membro</td></tr>
+  <tr><td><code>PUT · DELETE /api/despesas/:id</code></td><td>Editar / excluir</td><td>Autor ou admin</td></tr>
+</table>
+
+<!-- ============ 6 AUTENTICAÇÃO ============ -->
+<h2><span class="num">6</span>Autenticação e segurança: bcrypt e JWT</h2>
+<p>Duas perguntas diferentes que todo sistema precisa responder:</p>
+<ul>
+  <li><strong>Autenticação</strong>: <em>quem é você?</em> (login com e-mail e senha)</li>
+  <li><strong>Autorização</strong>: <em>o que você pode fazer?</em> (só o admin muda o limite)</li>
+</ul>
+<h3>6.1 Guardando senhas com bcrypt (RNF003)</h3>
+<div class="box conceito"><span class="t">Conceito: hash</span>
+Um <strong>hash</strong> é uma "impressão digital" de um texto: uma função matemática transforma a senha num código de tamanho fixo, e <strong>não existe caminho de volta</strong>. Para conferir a senha no login, calculamos o hash do que o usuário digitou e comparamos com o hash guardado. Assim, nem nós (nem quem invadir o banco) sabemos a senha de ninguém.</div>
+<p>Por que <strong>bcrypt</strong> e não SHA-256 (como estava na primeira versão da documentação)?</p>
+<ul>
+  <li><strong>É lento de propósito.</strong> O SHA-256 foi feito para ser rápido: uma placa de vídeo testa bilhões de senhas por segundo. O bcrypt tem um <strong>fator de custo</strong> (usamos 10, ou seja, 2<sup>10</sup> = 1024 rodadas) que torna cada tentativa cara.</li>
+  <li><strong>Usa salt automaticamente.</strong> O salt é um valor aleatório misturado à senha antes do hash. Duas pessoas com a senha "123456" ficam com hashes <em>diferentes</em>, o que inutiliza tabelas prontas de senhas comuns (<em>rainbow tables</em>).</li>
+</ul>
+<pre><span class="arq">api/src/routes/auth.js</span><span class="k">const</span> senha_hash = <span class="k">await</span> bcrypt.hash(senha, <span class="h">10</span>);         <span class="c">// cadastro: gera hash + salt</span>
+...
+<span class="k">await</span> bcrypt.compare(senha, usuario.senha_hash)           <span class="c">// login: confere</span>
+
+<span class="c">// No banco fica algo assim (o salt está embutido no próprio texto):</span>
+<span class="c">// $2b$10$N9qo8uLOickgx2ZMRZoMye.IjZAgcfl7p92ldGxad68LJZdL17lhW</span></pre>
+<h3>6.2 Mantendo o usuário logado com JWT</h3>
+<p>O HTTP é <strong>sem estado</strong> (<em>stateless</em>): cada requisição chega ao servidor como se fosse a primeira. Como o servidor sabe que o pedido vem da Ana? Depois do login, o servidor entrega um <strong>token JWT</strong> (<em>JSON Web Token</em>), e o app o envia em <strong>toda</strong> requisição seguinte.</p>
+<div class="fig">
+<svg viewBox="0 0 680 92" xmlns="http://www.w3.org/2000/svg" font-family="Consolas, monospace" font-size="12">
+  <rect x="5" y="8" width="160" height="40" rx="6" fill="#fee2e2"/><text x="85" y="33" text-anchor="middle" fill="#b91c1c">eyJhbGciOiJIUzI1NiJ9</text>
+  <text x="172" y="33" fill="#0f172a">.</text>
+  <rect x="182" y="8" width="230" height="40" rx="6" fill="#ede9fe"/><text x="297" y="33" text-anchor="middle" fill="#6d28d9">eyJzdWIiOjEsImV4cCI6MTc2M...</text>
+  <text x="419" y="33" fill="#0f172a">.</text>
+  <rect x="429" y="8" width="246" height="40" rx="6" fill="#dcfce7"/><text x="552" y="33" text-anchor="middle" fill="#047857">SflKxwRJSMeKKF2QT4fwpMeJf36P...</text>
+  <text x="85" y="70" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#334155">Cabeçalho (algoritmo)</text>
+  <text x="297" y="70" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#334155">Payload: { sub: id do usuário, exp: validade }</text>
+  <text x="552" y="70" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#334155">Assinatura (feita com o JWT_SECRET)</text>
+</svg>
+<div class="leg">Figura 3 — As três partes de um JWT, separadas por pontos.</div>
+</div>
+<ul>
+  <li>O <strong>payload</strong> não é secreto (é só Base64, qualquer um lê). Por isso guardamos apenas o <code>id</code> do usuário (<code>sub</code>) e a validade (7 dias), <strong>nunca</strong> a senha.</li>
+  <li>A <strong>assinatura</strong> é o que dá segurança: ela é calculada com o <code>JWT_SECRET</code>, que só o servidor conhece. Se alguém alterar o payload (trocar o id para outro usuário), a assinatura não bate e o token é rejeitado.</li>
+  <li>Por isso o <code>JWT_SECRET</code> fica numa <strong>variável de ambiente</strong> no Render e nunca no código.</li>
+</ul>
+<pre><span class="arq">api/src/auth.js</span><span class="k">export function</span> <span class="h">gerarToken</span>(usuario) {
+  <span class="k">return</span> jwt.sign({ sub: usuario.id }, SECRET, { expiresIn: <span class="s">'7d'</span> });
+}
+<span class="c">/** Middleware: exige token JWT válido no header Authorization. */</span>
+<span class="k">export async function</span> <span class="h">autenticar</span>(req, _res, next) {
+  <span class="k">const</span> [tipo, token] = (req.headers.authorization || <span class="s">''</span>).split(<span class="s">' '</span>);  <span class="c">// "Bearer eyJ..."</span>
+  <span class="k">if</span> (tipo !== <span class="s">'Bearer'</span> || !token) <span class="k">throw new</span> HttpError(<span class="h">401</span>, <span class="s">'Não autenticado.'</span>);
+  req.usuario = <span class="k">await</span> usuarioDoToken(token);   <span class="c">// confere a assinatura e busca o usuário</span>
+  next();
+}</pre>
+<h3>6.3 Autorização: papéis e "dono" do dado</h3>
+<pre><span class="arq">api/src/auth.js e routes/despesas.js</span><span class="k">export function</span> <span class="h">exigirAdmin</span>(req, _res, next) {           <span class="c">// RN003</span>
+  <span class="k">if</span> (req.usuario.papel !== <span class="s">'ADMIN'</span>) <span class="k">throw new</span> HttpError(<span class="h">403</span>, <span class="s">'Apenas o administrador...'</span>);
+  next();
+}
+<span class="c">// Só o autor da despesa ou o admin pode editar/excluir</span>
+<span class="k">if</span> (usuario.papel !== <span class="s">'ADMIN'</span> &amp;&amp; despesa.usuario_id !== usuario.id) <span class="k">throw new</span> HttpError(<span class="h">403</span>, ...);</pre>
+<div class="box pratica"><span class="t">No ConFin: isolamento entre famílias</span>
+Toda consulta de despesas filtra por <code>familia_id = $1</code>, e esse valor vem do <strong>token</strong> (do usuário logado), nunca de um parâmetro enviado pelo navegador. Assim é impossível ver as despesas de outra família, mesmo alterando a URL.</div>
+<h3>6.4 Outras camadas de segurança do projeto</h3>
+<table>
+  <tr><th>Proteção</th><th>Contra o quê</th><th>Onde</th></tr>
+  <tr><td>Consultas parametrizadas (<code>$1, $2</code>)</td><td>SQL Injection</td><td>Todas as queries (cap. 8)</td></tr>
+  <tr><td>HTTPS</td><td>Alguém "escutando" a rede (senha, token)</td><td>Render, automático</td></tr>
+  <tr><td>SSL na conexão com o banco</td><td>Interceptação entre Render e Supabase</td><td><code>DATABASE_SSL=true</code></td></tr>
+  <tr><td>Variáveis de ambiente</td><td>Vazar senhas no GitHub (repo público)</td><td><code>.env</code> no <code>.gitignore</code>; painel do Render</td></tr>
+  <tr><td>RLS no Supabase</td><td>Acesso direto pela API pública do Supabase</td><td><code>schema.sql</code></td></tr>
+  <tr><td>Limite de 100 KB no corpo</td><td>Requisições gigantes para derrubar o servidor</td><td><code>express.json</code></td></tr>
+  <tr><td>Mensagens de erro genéricas</td><td>Expor detalhes internos a atacantes</td><td>Tratador de erros (500)</td></tr>
+</table>
+
+<!-- ============ 7 TEMPO REAL ============ -->
+<h2><span class="num">7</span>Tempo real: WebSocket e Socket.io</h2>
+<h3>7.1 O problema: o HTTP só responde quando perguntam</h3>
+<p>No HTTP, a conversa é sempre <strong>pedido → resposta</strong>, e quem pergunta é o cliente. O servidor não tem como "ligar" para o celular da Ana para avisar que o Carlos gastou algo. Uma solução ingênua seria a Ana perguntar a cada 2 segundos "mudou algo?" (<strong>polling</strong>). Isso desperdiça bateria, rede e servidor, e ainda tem atraso.</p>
+<h3>7.2 A solução: WebSocket</h3>
+<div class="box conceito"><span class="t">Conceito</span>
+<strong>WebSocket</strong> é um protocolo que mantém uma <strong>conexão aberta nos dois sentidos</strong> entre o navegador e o servidor. Depois de conectados, <strong>qualquer um dos lados pode enviar mensagens a qualquer momento</strong>. É como uma ligação telefônica que fica em aberto, enquanto o HTTP é como mandar cartas.</div>
+<p>O <strong>Socket.io</strong> é uma biblioteca que usa WebSocket e acrescenta recursos práticos: <strong>reconexão automática</strong> (se o celular perde o sinal, ele reconecta sozinho), <strong>eventos com nome</strong> e <strong>salas</strong>.</p>
+<h3>7.3 Salas: uma por família</h3>
+<p>Cada família tem uma "sala" (<code>familia:7</code>, por exemplo). Quando alguém se conecta, o servidor confere o token e coloca a pessoa na sala da família dela. Para avisar uma família, o servidor fala só com aquela sala, e as outras famílias nunca recebem nada.</p>
+<pre><span class="arq">api/src/realtime.js</span>io.use(<span class="k">async</span> (socket, next) =&gt; {                   <span class="c">// "porteiro": só entra com token válido</span>
+  socket.data.usuario = <span class="k">await</span> usuarioDoToken(socket.handshake.auth?.token);
+  next();
+});
+io.on(<span class="s">'connection'</span>, (socket) =&gt; {
+  <span class="k">const</span> { familia_id } = socket.data.usuario;
+  <span class="k">if</span> (familia_id) socket.join(<span class="s">`familia:${familia_id}`</span>);   <span class="c">// entra na sala da família</span>
+});
+<span class="k">export function</span> <span class="h">notificarFamilia</span>(familiaId, tipo, dados) {
+  io?.to(<span class="s">`familia:${familiaId}`</span>).emit(<span class="s">'familia:mudou'</span>, { tipo, ...dados });
+}</pre>
+<pre><span class="arq">web/src/context/AppContext.jsx (resumido)</span><span class="k">const</span> socket = io(<span class="s">'/'</span>, { auth: { token: tokenStore.get() } });
+socket.on(<span class="s">'connect'</span>, () =&gt; setAoVivo(<span class="k">true</span>));          <span class="c">// acende o selo "AO VIVO"</span>
+socket.on(<span class="s">'familia:mudou'</span>, (evento) =&gt; {
+  atualizar();                                       <span class="c">// versao + 1 → telas recarregam</span>
+  <span class="k">if</span> (evento.autor_id === eu.id) <span class="k">return</span>;             <span class="c">// não avisa a si mesmo</span>
+  toast({ titulo: <span class="s">`${quem} registrou ${brl(d.valor)}`</span> }); <span class="c">// aviso no topo</span>
+});</pre>
+<div class="box pratica"><span class="t">Decisão de projeto: o evento é só um "sinal"</span>
+O evento traz a despesa e o saldo, mas o Dashboard <strong>busca o resumo completo de novo</strong> pela API REST. Por quê? Assim existe <strong>uma única fonte da verdade</strong> (o banco, via API). Se um evento se perder (o celular estava sem sinal), na próxima atualização a tela fica certa do mesmo jeito. É mais simples e mais robusto do que tentar "remendar" os gráficos na mão a cada evento.</div>
+<div class="box atencao"><span class="t">Atenção: escala</span>
+As salas do Socket.io ficam na memória de <strong>um</strong> servidor. Se um dia o ConFin rodar em várias instâncias ao mesmo tempo, será preciso um "adaptador" (por exemplo, com Redis) para que um servidor avise os usuários conectados aos outros. Com uma instância só, como hoje, isso não é necessário.</div>
+
+<!-- ============ 8 BANCO ============ -->
+<h2><span class="num">8</span>Banco de dados: PostgreSQL e o nosso modelo</h2>
+<h3>8.1 Por que um banco relacional?</h3>
+<div class="box conceito"><span class="t">Conceito</span>
+Um <strong>banco de dados relacional</strong> organiza os dados em <strong>tabelas</strong> (linhas e colunas) que se <strong>relacionam</strong> por chaves. Ele é consultado com <strong>SQL</strong> e garante as propriedades <strong>ACID</strong>: <em>Atomicidade</em> (tudo ou nada), <em>Consistência</em> (as regras sempre valem), <em>Isolamento</em> (operações simultâneas não se atrapalham) e <em>Durabilidade</em> (o que foi confirmado não se perde).</div>
+<p>Dados financeiros são <strong>estruturados</strong> e cheios de <strong>relações</strong> (despesa → usuário → família), e somas precisam ser exatas. O <strong>PostgreSQL</strong> é um banco relacional gratuito, de código aberto, muito robusto e oferecido de graça por serviços como o Supabase. Um banco NoSQL (como o MongoDB) seria mais flexível, mas abriria mão de garantias que aqui são valiosas.</p>
+<h3>8.2 O modelo: a família no centro</h3>
+<div class="fig">
+<svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI" font-size="11">
+  <g font-family="Consolas, monospace" font-size="10.5">
+  <rect x="250" y="10" width="180" height="120" rx="8" fill="#fff" stroke="#059669" stroke-width="2"/>
+  <rect x="250" y="10" width="180" height="26" rx="8" fill="#059669"/><text x="340" y="28" text-anchor="middle" fill="#fff" font-weight="700" font-family="Segoe UI" font-size="12">familia</text>
+  <text x="262" y="54" fill="#b45309">🔑 id</text><text x="262" y="72" fill="#0f172a">nome</text><text x="262" y="90" fill="#0f172a">limite_mensal  NUMERIC(12,2)</text><text x="262" y="108" fill="#0f172a">codigo_convite UNIQUE</text><text x="262" y="124" fill="#0f172a">criado_em</text>
+  <rect x="10" y="170" width="200" height="125" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="10" y="170" width="200" height="26" rx="8" fill="#0f172a"/><text x="110" y="188" text-anchor="middle" fill="#fff" font-weight="700" font-family="Segoe UI" font-size="12">usuario</text>
+  <text x="22" y="212" fill="#b45309">🔑 id</text><text x="22" y="228" fill="#0f172a">nome · email UNIQUE</text><text x="22" y="244" fill="#0f172a">senha_hash (bcrypt)</text><text x="22" y="260" fill="#0f172a">papel ADMIN|MEMBRO</text><text x="22" y="276" fill="#2563eb">🔗 familia_id → familia</text>
+  <rect x="245" y="170" width="215" height="125" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="245" y="170" width="215" height="26" rx="8" fill="#0f172a"/><text x="352" y="188" text-anchor="middle" fill="#fff" font-weight="700" font-family="Segoe UI" font-size="12">despesa</text>
+  <text x="257" y="212" fill="#b45309">🔑 id</text><text x="257" y="228" fill="#0f172a">valor CHECK (&gt; 0) · data</text><text x="257" y="244" fill="#0f172a">categoria · meio_pagamento</text><text x="257" y="260" fill="#2563eb">🔗 usuario_id → usuario</text><text x="257" y="276" fill="#2563eb">🔗 familia_id → familia</text>
+  <rect x="495" y="170" width="180" height="95" rx="8" fill="#fff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="495" y="170" width="180" height="26" rx="8" fill="#0f172a"/><text x="585" y="188" text-anchor="middle" fill="#fff" font-weight="700" font-family="Segoe UI" font-size="12">convite</text>
+  <text x="507" y="212" fill="#b45309">🔑 id</text><text x="507" y="228" fill="#0f172a">email</text><text x="507" y="244" fill="#2563eb">🔗 familia_id → familia</text><text x="507" y="258" fill="#0f172a" font-size="9">UNIQUE(familia_id, email)</text>
+  </g>
+  <g stroke="#059669" stroke-width="1.8" fill="none">
+    <path d="M290,130 L110,168"/><path d="M340,130 L352,168"/><path d="M395,130 L585,168"/><path d="M210,240 L243,240"/>
+  </g>
+  <g font-size="10.5" fill="#059669" font-weight="700">
+    <text x="182" y="146">1 : N</text><text x="350" y="152">1 : N</text><text x="480" y="146">1 : N</text><text x="212" y="234">1:N</text>
+  </g>
+</svg>
+<div class="leg">Figura 4 — Modelo entidade-relacionamento do ConFin (🔑 chave primária, 🔗 chave estrangeira).</div>
+</div>
+<p>Lendo o diagrama: <strong>uma família tem muitos usuários</strong>, <strong>uma família tem muitas despesas</strong>, <strong>um usuário registra muitas despesas</strong> e <strong>uma família tem muitos convites pendentes</strong>. Essa foi justamente a solução do problema registrado no diário de bordo (12.3): como dois usuários veriam o mesmo saldo? Colocando a <strong>família como entidade central</strong>. O saldo é da família, não do usuário.</p>
+<h3>8.3 As tabelas em detalhe</h3>
+<pre><span class="arq">api/db/schema.sql (trechos)</span><span class="k">CREATE TABLE IF NOT EXISTS</span> despesa (
+  id              <span class="h">SERIAL PRIMARY KEY</span>,                        <span class="c">-- número automático, único</span>
+  valor           <span class="h">NUMERIC(12,2)</span> NOT NULL <span class="k">CHECK</span> (valor &gt; <span class="h">0</span>),  <span class="c">-- RN002</span>
+  data            <span class="h">DATE</span> NOT NULL DEFAULT CURRENT_DATE,
+  categoria       <span class="h">VARCHAR(20)</span> NOT NULL <span class="k">CHECK</span> (categoria <span class="k">IN</span> (<span class="s">'MERCADO'</span>, <span class="s">'MORADIA'</span>, ...)),
+  meio_pagamento  <span class="h">VARCHAR(10)</span> NOT NULL <span class="k">CHECK</span> (meio_pagamento <span class="k">IN</span> (<span class="s">'CREDITO'</span>,<span class="s">'DEBITO'</span>,<span class="s">'PIX'</span>,<span class="s">'DINHEIRO'</span>)),
+  descricao       <span class="h">VARCHAR(120)</span>,                               <span class="c">-- opcional (aceita NULL)</span>
+  usuario_id      <span class="h">INT</span> <span class="k">REFERENCES</span> usuario(id) <span class="k">ON DELETE SET NULL</span>,
+  familia_id      <span class="h">INT</span> NOT NULL <span class="k">REFERENCES</span> familia(id) <span class="k">ON DELETE CASCADE</span>,
+  criado_em       <span class="h">TIMESTAMPTZ</span> NOT NULL DEFAULT now()
+);</pre>
+<h4>Decisões importantes, uma a uma</h4>
+<ul>
+  <li><strong><code>NUMERIC(12,2)</code> para dinheiro, nunca <code>FLOAT</code>.</strong> Números de ponto flutuante são aproximados em binário: em JavaScript, <code>0.1 + 0.2</code> dá <code>0.30000000000000004</code>. <code>NUMERIC</code> guarda valores decimais <strong>exatos</strong>, com até 12 dígitos, 2 deles depois da vírgula. Somar milhares de despesas não "perde centavos".</li>
+  <li><strong>Chave primária (<code>PRIMARY KEY</code>)</strong>: identifica cada linha de forma única. <code>SERIAL</code> gera 1, 2, 3... automaticamente.</li>
+  <li><strong>Chave estrangeira (<code>REFERENCES</code>)</strong>: garante que <code>familia_id</code> aponte para uma família que <strong>existe</strong>. Isso é a <strong>integridade referencial</strong>.</li>
+  <li><strong><code>ON DELETE CASCADE</code></strong> (despesa → família): se a família for apagada, as despesas dela vão junto, porque não fazem sentido sozinhas.</li>
+  <li><strong><code>ON DELETE SET NULL</code></strong> (despesa → usuário): se um membro sair do sistema, as despesas dele <strong>continuam</strong> na família (o dinheiro foi gasto!), só perdem o autor. No Dashboard, aparecem como "Ex-membro".</li>
+  <li><strong><code>CHECK</code> e <code>UNIQUE</code> como regras de negócio</strong>: <code>email UNIQUE</code> é a RN001, <code>CHECK (valor &gt; 0)</code> é a RN002. Mesmo que a API tenha um bug, o banco recusa dados inválidos.</li>
+  <li><strong><code>TIMESTAMPTZ</code></strong>: data e hora com fuso horário, para registrar quando cada linha foi criada.</li>
+  <li><strong>Normalização</strong>: cada informação fica num lugar só. O nome do usuário está em <code>usuario</code>, e a despesa guarda apenas o <code>usuario_id</code>. Se a pessoa mudar o nome, não é preciso atualizar milhares de despesas.</li>
+</ul>
+<h4>Índices: o "sumário" das tabelas</h4>
+<pre><span class="k">CREATE INDEX IF NOT EXISTS</span> idx_despesa_familia_data <span class="k">ON</span> despesa (familia_id, data);</pre>
+<p>Sem índice, para achar as despesas de novembro da família 7, o banco leria a tabela <strong>inteira</strong>. O índice funciona como o índice remissivo de um livro: vai direto às linhas certas. Escolhemos <code>(familia_id, data)</code> porque <strong>quase toda consulta do app filtra exatamente por família e período</strong>.</p>
+<h3>8.4 Como o servidor conversa com o banco</h3>
+<h4>Pool de conexões</h4>
+<p>Abrir uma conexão com o banco é lento (rede, autenticação, SSL). O <code>pg.Pool</code> mantém algumas conexões <strong>abertas e reutilizáveis</strong>: cada consulta "pega emprestada" uma conexão e devolve ao terminar.</p>
+<pre><span class="arq">api/src/db.js</span><span class="k">export const</span> pool = <span class="k">new</span> pg.Pool({
+  connectionString: process.env.DATABASE_URL,                     <span class="c">// onde está o banco</span>
+  ssl: process.env.DATABASE_SSL === <span class="s">'true'</span> ? { rejectUnauthorized: <span class="k">false</span> } : undefined,
+});</pre>
+<h4>Consultas parametrizadas: a defesa contra SQL Injection</h4>
+<div class="box atencao"><span class="t">Nunca faça isto</span>
+<code>query("SELECT * FROM usuario WHERE email = '" + email + "'")</code><br>
+Se alguém digitar no e-mail <code>' OR '1'='1</code>, a consulta vira <code>... WHERE email = '' OR '1'='1'</code>, que é sempre verdadeiro. Isso é <strong>SQL Injection</strong>, um dos ataques mais comuns da web.</div>
+<pre><span class="arq">o jeito certo, usado em todo o ConFin</span>query(<span class="s">'SELECT * FROM usuario WHERE email = $1'</span>, [email]);
+<span class="c">-- O texto do SQL e os valores viajam SEPARADOS. O banco trata $1 sempre como dado,</span>
+<span class="c">-- nunca como comando, não importa o que o usuário digite.</span></pre>
+<h4>Transações: tudo ou nada</h4>
+<p>No cadastro, se o e-mail tinha um convite pendente, fazemos três operações: verificar o convite, criar o usuário já na família e apagar o convite. Se a terceira falhar, não podemos ficar com um estado "pela metade". A <strong>transação</strong> (<code>BEGIN</code> … <code>COMMIT</code>, ou <code>ROLLBACK</code> em caso de erro) garante que ou tudo acontece, ou nada acontece: é o "A" do ACID.</p>
+<pre><span class="arq">api/src/db.js</span><span class="k">export async function</span> <span class="h">transacao</span>(fn) {
+  <span class="k">const</span> client = <span class="k">await</span> pool.connect();
+  <span class="k">try</span> {
+    <span class="k">await</span> client.query(<span class="s">'BEGIN'</span>);
+    <span class="k">const</span> resultado = <span class="k">await</span> fn(client);
+    <span class="k">await</span> client.query(<span class="s">'COMMIT'</span>);           <span class="c">// confirma tudo</span>
+    <span class="k">return</span> resultado;
+  } <span class="k">catch</span> (err) {
+    <span class="k">await</span> client.query(<span class="s">'ROLLBACK'</span>);         <span class="c">// desfaz tudo</span>
+    <span class="k">throw</span> err;
+  } <span class="k">finally</span> { client.release(); }          <span class="c">// devolve a conexão ao pool</span>
+}</pre>
+<h3>8.5 A consulta mais importante: o saldo do mês</h3>
+<p>Esta é a lógica central descrita na seção 10 da documentação. Vale ler devagar:</p>
+<pre><span class="arq">api/src/resumo.js — saldoDoMes()</span><span class="k">SELECT</span> f.limite_mensal <span class="k">AS</span> limite,
+       <span class="k">COALESCE</span>(<span class="k">SUM</span>(d.valor), <span class="h">0</span>) <span class="k">AS</span> total            <span class="c">-- soma; se não houver despesa, 0</span>
+  <span class="k">FROM</span> familia f
+  <span class="k">LEFT JOIN</span> despesa d <span class="k">ON</span> d.familia_id = f.id          <span class="c">-- junta as despesas da família...</span>
+       <span class="k">AND</span> d.data &gt;= $2::date                         <span class="c">-- ...a partir do dia 1 do mês</span>
+       <span class="k">AND</span> d.data &lt;  $2::date + <span class="k">INTERVAL</span> <span class="s">'1 month'</span>     <span class="c">-- ...até antes do dia 1 do mês seguinte</span>
+ <span class="k">WHERE</span> f.id = $1
+ <span class="k">GROUP BY</span> f.id</pre>
+<ul>
+  <li><strong><code>LEFT JOIN</code></strong> (e não <code>JOIN</code>): mantém a família no resultado <strong>mesmo que ela não tenha nenhuma despesa no mês</strong>. Com um <code>JOIN</code> comum, uma família sem despesas sumiria do resultado.</li>
+  <li><strong><code>COALESCE(SUM(...), 0)</code></strong>: a soma de "nada" em SQL é <code>NULL</code>, não 0. O <code>COALESCE</code> troca <code>NULL</code> por 0.</li>
+  <li><strong>Intervalo <code>&gt;= início</code> e <code>&lt; início + 1 mês</code></strong>: funciona para meses de 28, 30 ou 31 dias, sem precisar calcular o último dia, e aproveita o índice <code>(familia_id, data)</code>.</li>
+</ul>
+<p>Depois, em JavaScript: <code>saldo = limite − total</code>, <code>percentual = total ÷ limite × 100</code> e o nível de alerta (RN004):</p>
+<pre><span class="k">export function</span> <span class="h">nivelAlerta</span>(percentual) {
+  <span class="k">if</span> (percentual &gt;= <span class="h">100</span>) <span class="k">return</span> <span class="s">'ESTOURADO'</span>;
+  <span class="k">if</span> (percentual &gt;= <span class="h">80</span>)  <span class="k">return</span> <span class="s">'ATENCAO'</span>;
+  <span class="k">return</span> <span class="s">'OK'</span>;
+}</pre>
+<p>O Dashboard roda <strong>seis consultas em paralelo</strong> com <code>Promise.all</code> (saldo, por categoria, por membro, por meio de pagamento, últimos 6 meses e últimas transações), em vez de uma depois da outra. O gráfico de 6 meses usa <code>generate_series</code>, uma função do PostgreSQL que gera a lista de meses, para que <strong>meses sem gasto também apareçam</strong> (com zero).</p>
+<h3>8.6 Detalhes que evitam bugs sutis</h3>
+<ul>
+  <li><strong>Datas sem fuso</strong>: o tipo <code>DATE</code> é devolvido como texto <code>'2026-11-09'</code> (<code>db.js</code>). Se virasse um objeto <code>Date</code> do JavaScript, o fuso horário poderia transformar "9 de novembro" em "8 de novembro, 21h".</li>
+  <li><strong>"Hoje" no fuso de Brasília</strong>: o servidor do Render está nos EUA, com outro horário. O <code>util.js</code> calcula "hoje" e "mês atual" em <code>America/Sao_Paulo</code>; senão, uma despesa lançada às 22h do dia 30 poderia cair no mês seguinte.</li>
+  <li><strong>Schema idempotente</strong>: o <code>schema.sql</code> usa <code>CREATE TABLE IF NOT EXISTS</code> e roda toda vez que o servidor liga (<code>aplicarSchema()</code>). Rodar uma ou dez vezes dá o mesmo resultado: é isso que "idempotente" quer dizer.</li>
+  <li><strong>RLS (Row Level Security)</strong>: o Supabase cria automaticamente uma API pública para as tabelas. Ligamos o RLS sem nenhuma política, o que bloqueia esse acesso. Só a nossa API, que conecta como dona das tabelas, consegue ler e gravar.</li>
+</ul>
+
+<!-- ============ 9 HOSPEDAGEM ============ -->
+<h2><span class="num">9</span>Hospedagem: Render, Supabase e como se ligam</h2>
+<h3>9.1 IaaS, PaaS e SaaS</h3>
+<table>
+  <tr><th>Modelo</th><th>O provedor entrega</th><th>Você cuida de</th><th>Exemplos</th></tr>
+  <tr><td><strong>IaaS</strong><br>Infraestrutura como serviço</td><td>Máquina virtual "crua"</td><td>Sistema operacional, atualizações, Node, banco, firewall, HTTPS, deploy</td><td>AWS EC2, Azure VM</td></tr>
+  <tr><td><strong>PaaS</strong><br>Plataforma como serviço</td><td>Ambiente pronto para rodar código</td><td>Só o código e a configuração</td><td><strong>Render</strong>, Heroku, Vercel</td></tr>
+  <tr><td><strong>DBaaS</strong><br>Banco como serviço</td><td>Banco instalado, com backup e SSL</td><td>Só as tabelas e as consultas</td><td><strong>Supabase</strong>, Neon, AWS RDS</td></tr>
+  <tr><td><strong>SaaS</strong><br>Software como serviço</td><td>O programa pronto</td><td>Só usar</td><td>Gmail, o próprio ConFin</td></tr>
+</table>
+<div class="box analogia"><span class="t">Analogia: morar</span>
+<strong>IaaS</strong> é alugar um terreno: você constrói a casa. <strong>PaaS</strong> é alugar um apartamento mobiliado: você só leva as malas (o código). <strong>SaaS</strong> é um hotel: você só usa.</div>
+<h3>9.2 O que o Render faz pelo ConFin</h3>
+<ol class="passos">
+  <li><strong>Observa o GitHub.</strong> A cada <code>git push</code> na branch <code>main</code>, ele inicia um deploy sozinho. Isso é <strong>deploy contínuo (CD)</strong>.</li>
+  <li><strong>Faz o build</strong> com <code>npm run build</code>: instala as dependências da <code>api/</code> e do <code>web/</code> e compila o React para <code>web/dist</code>.</li>
+  <li><strong>Liga o servidor</strong> com <code>npm start</code>, que executa <code>node src/server.js</code>.</li>
+  <li><strong>Injeta as variáveis de ambiente</strong> (<code>DATABASE_URL</code>, <code>DATABASE_SSL</code>, <code>JWT_SECRET</code>) e a <code>PORT</code>, que é a porta definida pelo Render. Por isso o código usa <code>process.env.PORT || 3333</code>.</li>
+  <li><strong>Testa a saúde</strong> chamando <code>/api/health</code>. Só depois de receber <code>{"ok":true}</code> ele troca a versão antiga pela nova (<em>zero-downtime deploy</em>). Se a versão nova quebrar, a antiga continua no ar.</li>
+  <li><strong>Dá HTTPS e um endereço público</strong> (<code>confin-qetu.onrender.com</code>), com certificado renovado automaticamente.</li>
+  <li><strong>Reinicia</strong> o serviço se ele travar, e guarda os <strong>logs</strong> (tudo o que o <code>console.log</code> imprime).</li>
+</ol>
+<div class="box atencao"><span class="t">Plano gratuito</span>
+O serviço "dorme" depois de 15 minutos sem acesso, e o próximo acesso demora cerca de 50 segundos para acordá-lo. Por isso, abra o app alguns minutos antes da apresentação.</div>
+<h3>9.3 O que o Supabase faz</h3>
+<p>O Supabase hospeda um <strong>PostgreSQL de verdade</strong> na nuvem (região us-east-1, nos EUA), com backup e SSL. Ele também oferece login, armazenamento de arquivos e uma API automática, mas <strong>usamos só o banco</strong>, porque a nossa API faz o resto. No plano gratuito, o projeto <strong>pausa após 7 dias sem uso</strong> e precisa ser restaurado no painel.</p>
+<h3>9.4 Como o Render se liga ao Supabase</h3>
+<p>A ligação é feita por uma única informação: a <strong>connection string</strong>, guardada na variável <code>DATABASE_URL</code>. Ela é como um "endereço completo com chave" do banco:</p>
+<div class="fig">
+<p class="url"><span style="color:#64748b">postgresql://</span><span style="color:#2563eb">postgres.ID-DO-PROJETO</span>:<span style="color:#dc2626">SENHA</span>@<span style="color:#059669">aws-0-us-east-1.pooler.supabase.com</span>:<span style="color:#b45309">5432</span>/<span style="color:#7c3aed">postgres</span></p>
+<table style="max-width:150mm;margin:0 auto">
+  <tr><td style="color:#64748b"><code>postgresql://</code></td><td>Protocolo: avisa que é um banco PostgreSQL</td></tr>
+  <tr><td><code style="color:#2563eb">postgres.ID-DO-PROJETO</code></td><td>Usuário, com o ID do nosso projeto no Supabase depois do ponto</td></tr>
+  <tr><td><code style="color:#dc2626">SENHA</code></td><td>Senha do banco: o segredo. Só existe no painel do Render</td></tr>
+  <tr><td><code style="color:#059669">aws-0-us-east-1.pooler.supabase.com</code></td><td>Servidor: o "pooler" do Supabase, na região us-east-1</td></tr>
+  <tr><td><code style="color:#b45309">5432</code></td><td>Porta: a padrão do PostgreSQL (modo Session)</td></tr>
+  <tr><td><code style="color:#7c3aed">postgres</code></td><td>Nome do banco de dados</td></tr>
+</table>
+<div class="leg">Figura 5 — Anatomia da DATABASE_URL (com a senha substituída por SENHA).</div>
+</div>
+<ul>
+  <li><strong>Por que "Session pooler"?</strong> A conexão direta do Supabase só funciona por <strong>IPv6</strong>, e o Render só tem IPv4. O <em>pooler</em> é um intermediário que aceita IPv4 e repassa a conexão. O modo <em>Session</em> (porta 5432) mantém uma conexão por cliente, o que combina com o nosso servidor, que fica ligado o tempo todo e tem seu próprio pool.</li>
+  <li><strong>SSL</strong>: com <code>DATABASE_SSL=true</code>, todo o tráfego entre o Render (na Virgínia) e o Supabase (na mesma região) é criptografado. Colocar os dois na mesma região reduz a latência de cada consulta.</li>
+  <li><strong>As tabelas se criam sozinhas</strong>: na primeira vez que o servidor liga no Render, o <code>aplicarSchema()</code> executa o <code>schema.sql</code> no Supabase.</li>
+</ul>
+<h3>9.5 Variáveis de ambiente: mesmo código, configurações diferentes</h3>
+<p>O mesmo código roda no seu PC e no Render. O que muda são as <strong>variáveis de ambiente</strong>, lidas com <code>process.env.NOME</code>. Esse é um princípio do modelo <strong>12-Factor App</strong>: "a configuração fica no ambiente, não no código".</p>
+<table>
+  <tr><th></th><th>No seu PC (desenvolvimento)</th><th>No Render (produção)</th></tr>
+  <tr><td>Banco</td><td>PostgreSQL embutido (<code>npm run db:local</code>, porta 5433)</td><td>Supabase (nuvem)</td></tr>
+  <tr><td>Variáveis vêm de</td><td>Arquivo <code>api/.env</code> (fora do Git)</td><td>Painel Environment do Render</td></tr>
+  <tr><td>Front-end</td><td>Vite em <code>localhost:5173</code>, com proxy para a API</td><td>Arquivos de <code>web/dist</code> servidos pela própria API</td></tr>
+  <tr><td>Endereço</td><td><code>http://localhost:5173</code></td><td><code>https://confin-qetu.onrender.com</code></td></tr>
+  <tr><td>Dados</td><td>Família de demo, recriada com <code>npm run db:seed</code></td><td>Dados reais (e a demo, na véspera do pitch)</td></tr>
+</table>
+<div class="box conceito"><span class="t">Conceito: o PostgreSQL embutido</span>
+No PC do trabalho o Docker não funcionava. A solução foi o pacote <code>embedded-postgres</code>, que baixa um PostgreSQL real (versão 18) e o executa direto pelo Node, sem instalação. É o mesmo banco da produção, então o que funciona no PC funciona no Supabase.</div>
+
+<!-- ============ 10 PONTA A PONTA ============ -->
+<h2><span class="num">10</span>Uma despesa de ponta a ponta</h2>
+<p>Agora juntamos tudo. Este é o caminho completo do momento em que o Carlos toca em <strong>Salvar</strong> até o celular da Ana mostrar o alerta, que é exatamente a cena da demonstração do pitch:</p>
+<ol class="passos">
+  <li><strong>Formulário</strong> (<code>web/src/components/DespesaSheet.jsx</code>): o Carlos digita R$ 420,90 com a máscara de moeda. O componente já mostra a prévia ("depois desta despesa sobram R$ 839,11") e impede o envio de valor zero.</li>
+  <li><strong>Chamada HTTP</strong> (<code>web/src/lib/api.js</code>): <code>POST /api/despesas</code> com o JSON da despesa e o cabeçalho <code>Authorization: Bearer &lt;token do Carlos&gt;</code>. Viaja por <strong>HTTPS</strong> até o Render.</li>
+  <li><strong>Middlewares</strong> (<code>server.js</code>, <code>auth.js</code>): o JSON é lido; o <code>autenticar</code> confere a assinatura do token e descobre que é o Carlos; o <code>exigirFamilia</code> confirma que ele tem família.</li>
+  <li><strong>Validação</strong> (<code>validarDespesa</code> em <code>routes/despesas.js</code>): valor &gt; 0 (RN002), categoria e meio de pagamento válidos, data no formato certo.</li>
+  <li><strong>Gravação</strong>: <code>INSERT INTO despesa ... VALUES ($1, $2, ...)</code>, uma consulta parametrizada, pelo pool de conexões, com SSL, até o Supabase. O banco confere o <code>CHECK</code> e as chaves estrangeiras.</li>
+  <li><strong>Novo saldo</strong> (<code>resumo.js</code>): a consulta do saldo do mês calcula total = R$ 3.660,89, ou seja, 81,4% do limite → alerta <code>ATENCAO</code> (RN004).</li>
+  <li><strong>Aviso em tempo real</strong> (<code>realtime.js</code>): <code>notificarFamilia()</code> emite <code>familia:mudou</code> para a sala <code>familia:&lt;id&gt;</code>, com a despesa e o saldo.</li>
+  <li><strong>Resposta ao Carlos</strong>: <code>201 Created</code> com a despesa e o saldo. O formulário fecha e a tela dele atualiza. É o cenário alternativo do UC002: passar do limite é permitido, mas gera alerta.</li>
+  <li><strong>O celular da Ana recebe o evento</strong> (<code>AppContext.jsx</code>), que estava conectado por WebSocket o tempo todo: aparece o aviso "Carlos registrou R$ 420,90", e a <code>versao</code> sobe.</li>
+  <li><strong>O Dashboard da Ana se atualiza</strong> (<code>Dashboard.jsx</code>): como <code>versao</code> mudou, o <code>useEffect</code> chama <code>GET /api/despesas/resumo</code> e a tela é redesenhada com R$ 839,11, a barra amarela e o selo "Atenção: acima de 80%". Ninguém recarregou a página.</li>
+</ol>
+<p>Tudo isso acontece, em geral, em <strong>menos de um segundo</strong>, o que atende ao RNF001 (resposta em até 2 segundos).</p>
+<div class="box pratica"><span class="t">Exercício de fixação</span>
+Abra cada arquivo citado acima e encontre a linha exata de cada passo. Depois, explique o fluxo em voz alta para alguém da equipe, sem olhar. Se conseguir, você domina a arquitetura do projeto. Também é uma ótima preparação para as perguntas da banca.</div>
+
+<!-- ============ 11 FERRAMENTAS ============ -->
+<h2><span class="num">11</span>Ferramentas do dia a dia: Git, npm e scripts</h2>
+<h3>11.1 Git e GitHub</h3>
+<ul>
+  <li><strong>Git</strong> é um <strong>controle de versão</strong>: guarda o histórico de todas as mudanças (<em>commits</em>), permite voltar no tempo e trabalhar em equipe sem um sobrescrever o outro.</li>
+  <li><strong>GitHub</strong> é o site que hospeda o repositório na nuvem. É de lá que o Render baixa o código.</li>
+  <li>Comandos essenciais: <code>git status</code> (o que mudou), <code>git add</code> + <code>git commit -m "..."</code> (salvar uma versão), <code>git push</code> (enviar ao GitHub, o que dispara o deploy), <code>git pull</code> (baixar o que os outros enviaram).</li>
+  <li>O <code>.gitignore</code> lista o que <strong>não</strong> vai para o GitHub: <code>node_modules/</code> (pesado, reinstalável), <code>dist/</code> (gerado no build) e <strong><code>.env</code></strong> (segredos).</li>
+</ul>
+<h3>11.2 npm e o package.json</h3>
+<ul>
+  <li><strong>npm</strong> é o gerenciador de pacotes do Node: baixa as bibliotecas (dependências) para a pasta <code>node_modules</code>.</li>
+  <li><code>package.json</code> lista as dependências e os <strong>scripts</strong>. <code>dependencies</code> são necessárias para rodar; <code>devDependencies</code>, só para desenvolver (por exemplo, o Vite e o PostgreSQL embutido).</li>
+  <li><code>package-lock.json</code> "congela" as versões exatas instaladas, para que o Render instale <strong>exatamente</strong> o mesmo que o seu PC (<code>npm ci</code> usa esse arquivo).</li>
+  <li>Versões como <code>^5.3.0</code> seguem o <strong>versionamento semântico</strong> (MAIOR.MENOR.CORREÇÃO): o <code>^</code> aceita atualizações que não quebram compatibilidade.</li>
+</ul>
+<h3>11.3 Os scripts do projeto</h3>
+<table>
+  <tr><th>Comando (na raiz)</th><th>O que faz</th></tr>
+  <tr><td><code>npm run setup</code></td><td>Instala as dependências da <code>api/</code> e do <code>web/</code></td></tr>
+  <tr><td><code>npm run db:local</code></td><td>Liga o PostgreSQL local na porta 5433</td></tr>
+  <tr><td><code>npm run db:seed</code></td><td>Apaga e recria a família de demonstração (Ana, Carlos, Júlia), com 6 meses de despesas</td></tr>
+  <tr><td><code>npm run dev:api</code> / <code>dev:web</code></td><td>Sobe a API (3333) e o front (5173) em modo desenvolvimento</td></tr>
+  <tr><td><code>npm run test:smoke</code></td><td><strong>Teste de fumaça</strong>: testa de ponta a ponta cadastro, login, RN001, RN002, permissões e o cálculo do saldo</td></tr>
+  <tr><td><code>npm run build</code> / <code>npm start</code></td><td>O que o Render executa: compilar e ligar</td></tr>
+</table>
+<div class="box conceito"><span class="t">Conceito: seed e teste de fumaça</span>
+<strong>Seed</strong> ("semente") é um script que popula o banco com dados de exemplo. O nosso usa um gerador de números aleatórios com semente fixa, então sempre gera os mesmos dados, e calibra o mês atual em cerca de 72% do limite para a demo. <strong>Teste de fumaça</strong> (<em>smoke test</em>) é um teste rápido que verifica se as funções principais "ligam sem soltar fumaça". Não cobre tudo, mas pega quebras graves antes de um deploy.</div>
+
+<!-- ============ 12 MELHORIAS ============ -->
+<h2><span class="num">12</span>O que pode melhorar (e como aprender com isso)</h2>
+<p>Todo projeto tem limitações, e saber apontá-las é sinal de maturidade técnica. Estes são os pontos que um desenvolvedor mais experiente apontaria no ConFin, e cada um é um ótimo tema de estudo:</p>
+<table>
+  <tr><th>Ponto</th><th>Hoje</th><th>Evolução</th><th>O que estudar</th></tr>
+  <tr><td>Testes</td><td>Um teste de fumaça de ponta a ponta</td><td>Testes unitários (ex.: <code>nivelAlerta</code>) e de integração automatizados</td><td>Vitest, Jest, Supertest; pirâmide de testes</td></tr>
+  <tr><td>CI</td><td>O Render faz o deploy mesmo se algo estiver quebrado (só o health check protege)</td><td>Rodar os testes automaticamente a cada push antes do deploy</td><td>GitHub Actions</td></tr>
+  <tr><td>Migrations</td><td><code>CREATE TABLE IF NOT EXISTS</code> não altera tabelas que já existem</td><td>Migrations versionadas (001_cria_tabelas, 002_adiciona_coluna...)</td><td>node-pg-migrate, Prisma, Knex</td></tr>
+  <tr><td>Tipos</td><td>JavaScript puro</td><td>TypeScript compartilhando tipos entre front e back</td><td>TypeScript, Zod</td></tr>
+  <tr><td>Força bruta no login</td><td>Sem limite de tentativas</td><td>Limitar tentativas por IP</td><td><code>express-rate-limit</code>; OWASP</td></tr>
+  <tr><td>Token no navegador</td><td>JWT no <code>localStorage</code> (legível se houver uma falha de XSS)</td><td>Cookie <code>HttpOnly</code> + proteção CSRF, ou token de curta duração com <em>refresh token</em></td><td>XSS, CSRF, cookies seguros</td></tr>
+  <tr><td>Logs e monitoramento</td><td><code>console.log</code></td><td>Logs estruturados e alertas de erro</td><td>pino, Sentry</td></tr>
+  <tr><td>Recuperar senha</td><td>Ainda não existe</td><td>Envio de link por e-mail com token temporário</td><td>Nodemailer, tokens de uso único</td></tr>
+</table>
+<div class="box pratica"><span class="t">Dica para a carreira</span>
+Em entrevistas de estágio, falar de um projeto seu e dizer "funciona assim, escolhemos isto por causa daquilo, e se eu fosse evoluir faria isto" impressiona muito mais do que listar tecnologias. Este capítulo e o anterior são exatamente esse roteiro.</div>
+
+<!-- ============ 13 PERGUNTAS ============ -->
+<h2><span class="num">13</span>Perguntas que a banca pode fazer</h2>
+<div class="q"><b>Por que JavaScript e não Java, C# ou Python?</b>Porque é a única linguagem que roda no navegador. Usando Node.js no servidor, a equipe trabalha com uma única linguagem nas duas pontas, e o ecossistema (React, Express, Socket.io) é maduro e gratuito.</div>
+<div class="q"><b>Como funciona o tempo real?</b>Com WebSocket, via Socket.io. Cada celular mantém uma conexão aberta com o servidor e entra numa "sala" da sua família. Quando alguém registra uma despesa, o servidor avisa a sala, e as telas buscam o resumo atualizado pela API.</div>
+<div class="q"><b>Como garantem que uma família não vê os dados da outra?</b>O id da família vem do token JWT do usuário logado, nunca de um parâmetro enviado pelo navegador, e todas as consultas filtram por ele. No tempo real, cada família tem a sua sala, e só entra quem tem um token válido.</div>
+<div class="q"><b>Como as senhas são armazenadas?</b>Como hash bcrypt com custo 10 e salt automático. Não é possível recuperar a senha a partir do hash. Trocamos o SHA-256 da primeira versão porque ele é rápido demais e facilita ataques de força bruta.</div>
+<div class="q"><b>Por que PostgreSQL? Por que não NoSQL?</b>Os dados são estruturados e relacionados (família → usuários → despesas), e as somas de dinheiro precisam ser exatas. O banco relacional garante integridade (chaves estrangeiras, UNIQUE, CHECK) e transações ACID. Usamos NUMERIC(12,2) para não ter erro de arredondamento.</div>
+<div class="q"><b>Onde estão as regras de negócio?</b>Em camadas: no formulário (experiência do usuário), na API (validação e permissões) e no banco (CHECK e UNIQUE, a última barreira). Por exemplo, a RN002 está nas três.</div>
+<div class="q"><b>Por que Render e não AWS, como estava na documentação?</b>O Render é um PaaS: entregamos o código e ele cuida do servidor, do HTTPS e do deploy automático a cada push, com custo zero. Na EC2 (IaaS) teríamos que configurar sistema operacional, servidor web, certificado e processo manualmente. A AWS fica como evolução futura.</div>
+<div class="q"><b>O que acontece se o usuário passar do limite?</b>O sistema permite registrar (o gasto aconteceu de verdade), mas mostra o alerta. É o cenário alternativo do UC002. Os alertas aparecem em 80% (atenção) e 100% (estourado), conforme a RN004.</div>
+<div class="q"><b>E se a internet do celular cair?</b>O selo "Ao vivo" muda para "Offline" e o Socket.io reconecta sozinho quando o sinal volta. Como as telas sempre buscam os dados da API, ao reconectar elas mostram o estado correto.</div>
+<div class="q"><b>Como vocês testaram?</b>Com um teste automatizado de ponta a ponta (smoke test) que cobre cadastro, login, e-mail duplicado, valor negativo, permissões e cálculo do saldo, além de testes manuais com dois usuários simultâneos para validar o tempo real.</div>
+
+<!-- ============ 14 EXERCÍCIOS ============ -->
+<h2><span class="num">14</span>Exercícios práticos e trilha de estudo</h2>
+<p>A melhor forma de aprender é <strong>mexer no próprio projeto</strong>. Faça cada exercício numa <strong>branch</strong> separada (<code>git checkout -b estudo-1</code>), para não afetar a <code>main</code> nem o deploy. Estão em ordem de dificuldade:</p>
+<ol class="passos">
+  <li><strong>Mude um texto e veja o HMR.</strong> Com <code>npm run dev:web</code> rodando, altere "Resumo da família" no <code>Dashboard.jsx</code> e salve. A tela muda sem recarregar.</li>
+  <li><strong>Explore a API "na mão".</strong> Abra <code>http://localhost:3333/api/health</code> no navegador. Depois, use a extensão <em>Thunder Client</em> do VS Code para fazer login (<code>POST /api/auth/login</code>) e chamar <code>/api/despesas/resumo</code> com o token.</li>
+  <li><strong>Teste a defesa da API.</strong> Envie uma despesa com <code>"valor": -10</code> direto para a API e veja o erro 400. Depois, tente com um token de um membro alterar o limite (<code>PATCH /api/familias/minha</code>) e veja o 403.</li>
+  <li><strong>Consulte o banco com SQL.</strong> Instale o <em>DBeaver</em> (gratuito), conecte em <code>localhost:5433</code> (usuário e senha <code>postgres</code>, banco <code>confin</code>) e escreva consultas: total gasto por categoria, quem gastou mais no mês, a maior despesa.</li>
+  <li><strong>Escreva um teste unitário</strong> para <code>nivelAlerta()</code> com o executor de testes do próprio Node (<code>node --test</code>): 79,9 → OK; 80 → ATENCAO; 100 → ESTOURADO.</li>
+  <li><strong>Adicione uma categoria</strong> ("Pets"). Você vai precisar mexer no <code>CHECK</code> do <code>schema.sql</code>, no <code>util.js</code> e no <code>categorias.js</code> do front, o que mostra como uma mudança atravessa as três camadas. Repare também no problema das migrations (capítulo 12).</li>
+  <li><strong>Crie um endpoint novo</strong>: <code>GET /api/despesas/exportar?mes=AAAA-MM</code>, que devolve um CSV para abrir no Excel. Pratica rotas, consulta SQL e cabeçalhos HTTP (<code>Content-Type: text/csv</code>).</li>
+  <li><strong>Desafio:</strong> limite de gasto por categoria, com alerta próprio. Envolve modelagem (uma tabela nova), API, tempo real e interface: o ciclo completo.</li>
+</ol>
+<h3>Trilha de estudo recomendada</h3>
+<table>
+  <tr><th>Tema</th><th>Onde estudar (gratuito)</th></tr>
+  <tr><td>JavaScript do zero ao avançado</td><td>MDN Web Docs (developer.mozilla.org/pt-BR) e javascript.info</td></tr>
+  <tr><td>React</td><td>react.dev, o tutorial oficial ("Learn"), com exemplos interativos</td></tr>
+  <tr><td>Node.js e Express</td><td>nodejs.org/learn e expressjs.com (guia de rotas e middlewares)</td></tr>
+  <tr><td>SQL e PostgreSQL</td><td>postgresqltutorial.com e SQLBolt (exercícios no navegador)</td></tr>
+  <tr><td>HTTP, REST e segurança web</td><td>MDN, seção HTTP; OWASP Top 10 (owasp.org)</td></tr>
+  <tr><td>Git</td><td>learngitbranching.js.org (visual e interativo)</td></tr>
+  <tr><td>Visão de carreira</td><td>roadmap.sh: trilhas de front-end, back-end e full-stack</td></tr>
+</table>
+
+<!-- ============ 15 GLOSSÁRIO ============ -->
+<h2><span class="num">15</span>Glossário</h2>
+<dl class="glos duas">
+  <div>
+    <dt>API</dt><dd>Interface de Programação de Aplicações: o "contrato" de como um programa conversa com outro.</dd>
+    <dt>Back-end</dt><dd>A parte do sistema que roda no servidor: regras, dados, segurança.</dd>
+    <dt>Build</dt><dd>Processo que transforma o código-fonte em arquivos otimizados prontos para produção.</dd>
+    <dt>CI/CD</dt><dd>Integração e entrega/deploy contínuos: testar e publicar automaticamente a cada mudança.</dd>
+    <dt>Componente</dt><dd>Peça reutilizável de interface no React (uma função que devolve JSX).</dd>
+    <dt>Connection string</dt><dd>Texto com tudo o que é preciso para conectar a um banco (usuário, senha, servidor, porta).</dd>
+    <dt>CORS</dt><dd>Regra do navegador que controla quais sites podem chamar uma API.</dd>
+    <dt>Deploy</dt><dd>Publicar uma versão do sistema no ambiente de produção.</dd>
+    <dt>Endpoint</dt><dd>Um endereço da API com um verbo, por exemplo <code>POST /api/despesas</code>.</dd>
+    <dt>Front-end</dt><dd>A parte do sistema que o usuário vê, que roda no navegador.</dd>
+    <dt>Hash</dt><dd>Transformação de mão única de um texto num código fixo (usado nas senhas).</dd>
+    <dt>Health check</dt><dd>Endereço que diz se o serviço está funcionando (<code>/api/health</code>).</dd>
+    <dt>Hook</dt><dd>Função do React que começa com <code>use</code> e dá "poderes" aos componentes (estado, efeitos).</dd>
+    <dt>Idempotente</dt><dd>Operação que dá o mesmo resultado se executada uma ou várias vezes.</dd>
+    <dt>Índice</dt><dd>Estrutura que acelera buscas no banco, como o índice de um livro.</dd>
+  </div>
+  <div>
+    <dt>JSON</dt><dd>Formato de texto para trocar dados entre front e back.</dd>
+    <dt>JWT</dt><dd>Token assinado que prova quem é o usuário em cada requisição.</dd>
+    <dt>Middleware</dt><dd>Função no meio do caminho da requisição, que pode barrar ou passar adiante.</dd>
+    <dt>Monólito</dt><dd>Sistema publicado como uma única aplicação.</dd>
+    <dt>ORM</dt><dd>Biblioteca que gera SQL a partir de objetos (não usamos: escrevemos o SQL à mão).</dd>
+    <dt>PaaS / IaaS</dt><dd>Plataforma pronta para código / máquina virtual "crua" (ver capítulo 9).</dd>
+    <dt>Pool de conexões</dt><dd>Conjunto de conexões com o banco reaproveitadas entre consultas.</dd>
+    <dt>PWA</dt><dd>Site instalável como aplicativo, com manifest e service worker.</dd>
+    <dt>REST</dt><dd>Estilo de API baseado em recursos, verbos HTTP e códigos de status.</dd>
+    <dt>RLS</dt><dd>Row Level Security: regras do PostgreSQL sobre quem acessa cada linha.</dd>
+    <dt>Salt</dt><dd>Valor aleatório misturado à senha antes do hash.</dd>
+    <dt>Seed</dt><dd>Script que popula o banco com dados de exemplo.</dd>
+    <dt>SPA</dt><dd>Aplicação de página única: troca de tela sem recarregar.</dd>
+    <dt>SQL Injection</dt><dd>Ataque que insere comandos SQL por um campo de texto. Evitado com parâmetros.</dd>
+    <dt>Transação</dt><dd>Grupo de operações no banco que acontece por completo ou não acontece.</dd>
+    <dt>WebSocket</dt><dd>Conexão aberta e bidirecional entre navegador e servidor.</dd>
+  </div>
+</dl>
+</body>
+</html>

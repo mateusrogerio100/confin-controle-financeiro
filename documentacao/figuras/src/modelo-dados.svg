@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 470" width="820" height="470" font-family="Arial" font-size="12.5">
+  <rect width="820" height="470" fill="#fff"/>
+  <!-- FAMILIA -->
+  <g>
+    <rect x="300" y="15" width="220" height="150" fill="#fff" stroke="#000" stroke-width="1.5"/>
+    <rect x="300" y="15" width="220" height="28" fill="#e5e7eb" stroke="#000" stroke-width="1.5"/>
+    <text x="410" y="34" text-anchor="middle" font-weight="bold" font-size="14">familia</text>
+    <text x="312" y="62"><tspan font-weight="bold">PK</tspan>  id : SERIAL</text>
+    <text x="312" y="84">nome : VARCHAR(80)</text>
+    <text x="312" y="106">limite_mensal : NUMERIC(12,2)</text>
+    <text x="312" y="128">codigo_convite : VARCHAR(8) <tspan font-size="10.5">UQ</tspan></text>
+    <text x="312" y="150">criado_em : TIMESTAMPTZ</text>
+  </g>
+  <!-- USUARIO -->
+  <g>
+    <rect x="10" y="255" width="240" height="194" fill="#fff" stroke="#000" stroke-width="1.5"/>
+    <rect x="10" y="255" width="240" height="28" fill="#e5e7eb" stroke="#000" stroke-width="1.5"/>
+    <text x="130" y="274" text-anchor="middle" font-weight="bold" font-size="14">usuario</text>
+    <text x="22" y="302"><tspan font-weight="bold">PK</tspan>  id : SERIAL</text>
+    <text x="22" y="324">nome : VARCHAR(80)</text>
+    <text x="22" y="346">email : VARCHAR(120) <tspan font-size="10.5">UQ</tspan></text>
+    <text x="22" y="368">senha_hash : VARCHAR(100)</text>
+    <text x="22" y="390">papel : ADMIN | MEMBRO</text>
+    <text x="22" y="412"><tspan font-weight="bold">FK</tspan>  familia_id → familia</text>
+    <text x="22" y="434">criado_em : TIMESTAMPTZ</text>
+  </g>
+  <!-- DESPESA -->
+  <g>
+    <rect x="290" y="255" width="260" height="194" fill="#fff" stroke="#000" stroke-width="1.5"/>
+    <rect x="290" y="255" width="260" height="28" fill="#e5e7eb" stroke="#000" stroke-width="1.5"/>
+    <text x="420" y="274" text-anchor="middle" font-weight="bold" font-size="14">despesa</text>
+    <text x="302" y="302"><tspan font-weight="bold">PK</tspan>  id : SERIAL</text>
+    <text x="302" y="324">valor : NUMERIC(12,2) <tspan font-size="10.5">CHECK &gt; 0</tspan></text>
+    <text x="302" y="346">data : DATE</text>
+    <text x="302" y="368">categoria · meio_pagamento</text>
+    <text x="302" y="390">descricao : VARCHAR(120)</text>
+    <text x="302" y="412"><tspan font-weight="bold">FK</tspan>  usuario_id → usuario</text>
+    <text x="302" y="434"><tspan font-weight="bold">FK</tspan>  familia_id → familia</text>
+  </g>
+  <!-- CONVITE -->
+  <g>
+    <rect x="590" y="255" width="220" height="128" fill="#fff" stroke="#000" stroke-width="1.5"/>
+    <rect x="590" y="255" width="220" height="28" fill="#e5e7eb" stroke="#000" stroke-width="1.5"/>
+    <text x="700" y="274" text-anchor="middle" font-weight="bold" font-size="14">convite</text>
+    <text x="602" y="302"><tspan font-weight="bold">PK</tspan>  id : SERIAL</text>
+    <text x="602" y="324">email : VARCHAR(120)</text>
+    <text x="602" y="346"><tspan font-weight="bold">FK</tspan>  familia_id → familia</text>
+    <text x="602" y="368" font-size="11">UQ (familia_id, email)</text>
+  </g>
+  <!-- Relacionamentos (notação pé de galinha simplificada: 1 ── N) -->
+  <g stroke="#000" stroke-width="1.4" fill="none">
+    <path d="M340,165 L130,255"/>
+    <path d="M410,165 L420,255"/>
+    <path d="M480,165 L700,255"/>
+    <path d="M250,352 L290,352"/>
+  </g>
+  <g font-size="12" font-weight="bold">
+    <text x="318" y="182">1</text><text x="140" y="246">N</text>
+    <text x="400" y="182">1</text><text x="428" y="246">N</text>
+    <text x="492" y="182">1</text><text x="680" y="246">N</text>
+    <text x="253" y="345">1</text><text x="279" y="345">N</text>
+  </g>
+  <g font-size="11" font-style="italic" fill="#374151">
+    <text x="175" y="205">possui</text>
+    <text x="422" y="215">registra</text>
+    <text x="600" y="205">recebe</text>
+  </g>
+</svg>
